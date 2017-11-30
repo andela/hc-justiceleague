@@ -1,6 +1,8 @@
+import json
+
 from django.test.utils import override_settings
 
-from hc.api.models import Channel
+from hc.api.models import Channel, Check
 from hc.test import BaseTestCase
 
 
@@ -38,4 +40,22 @@ class AddChannelTestCase(BaseTestCase):
             self.assertContains(r, "Integration Settings", status_code=200)
 
     ### Test that the team access works
-    ### Test that bad kinds don't work
+    def test_team_access(self):
+        # Create a check
+        url = "/checks/add/"
+        self.client.login(username="alice@example.org", password="password")
+        r = self.client.post(url)
+        self.assertRedirects(r, "/checks/")
+        check = Check.objects.filter(user=self.alice).first().code
+        assert Check.objects.count() == 1
+        self.client.logout()
+        self.client.login(username="bob@example.org", password="password")
+        response = self.client.get('/checks/')
+        self.assertIn(str(check), str(response.content))
+        self.client.logout()
+        self.client.login(username="charlie@example.org", password="password")
+        charlie_s_checks = self.client.get('/checks/')
+        self.assertContains(charlie_s_checks, "You don\'t have any checks yet.")
+        
+
+
