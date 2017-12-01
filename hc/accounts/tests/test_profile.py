@@ -21,7 +21,12 @@ class ProfileTestCase(BaseTestCase):
         self.assertTrue(len(token) > 10)
 
         ### Assert that the email was sent and check email content
-        
+        self.assertEqual(len(mail.outbox), 1)
+        self.assertIn("Set password on healthchecks.io", mail.outbox[0].subject)
+        self.assertIn(
+            "Here's a link to set a password for your account on healthchecks.io", 
+            mail.outbox[0].body
+        )
 
     def test_it_sends_report(self):
         check = Check(name="Test Check", user=self.alice)
