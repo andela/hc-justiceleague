@@ -18,8 +18,15 @@ class ProfileTestCase(BaseTestCase):
         self.alice.profile.refresh_from_db()
         token = self.alice.profile.token
         ### Assert that the token is set
+        self.assertTrue(len(token) > 10)
 
         ### Assert that the email was sent and check email content
+        self.assertEqual(len(mail.outbox), 1)
+        self.assertIn("Set password on healthchecks.io", mail.outbox[0].subject)
+        self.assertIn(
+            "Here's a link to set a password for your account on healthchecks.io", 
+            mail.outbox[0].body
+        )
 
     def test_it_sends_report(self):
         check = Check(name="Test Check", user=self.alice)
@@ -28,6 +35,12 @@ class ProfileTestCase(BaseTestCase):
         self.alice.profile.send_report()
 
         ###Assert that the email was sent and check email content
+        self.assertEqual(len(mail.outbox), 1)
+        self.assertIn("Monthly Report", mail.outbox[0].subject)
+        self.assertIn(
+            "This is a monthly report sent by healthchecks.io", 
+            mail.outbox[0].body
+        )
 
     def test_it_adds_team_member(self):
         self.client.login(username="alice@example.org", password="password")
@@ -41,10 +54,24 @@ class ProfileTestCase(BaseTestCase):
             member_emails.add(member.user.email)
 
         ### Assert the existence of the member emails
-
+        self.assertEqual(len(member_emails), 2)
+        self.assertTrue("bob@example.org" in member_emails)
         self.assertTrue("frank@example.org" in member_emails)
 
         ###Assert that the email was sent and check email content
+        self.assertEqual(len(mail.outbox), 1)
+        self.assertIn(
+            "You have been invited to join alice@example.org on healthchecks.io", 
+            mail.outbox[0].subject
+        )
+        self.assertIn(
+            "You will be able to manage their existing monitoring checks and set up new\nones", 
+            mail.outbox[0].body
+        )
+        self.assertIn(
+            "To log into healthchecks.io, please open the link below", 
+            mail.outbox[0].body
+        )
 
     def test_add_team_member_checks_team_access_allowed_flag(self):
         self.client.login(username="charlie@example.org", password="password")
