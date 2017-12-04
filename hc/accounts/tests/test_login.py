@@ -21,8 +21,12 @@ class LoginTestCase(TestCase):
         assert r.status_code == 302
 
         ### Assert that a user was created
+<<<<<<< HEAD
         self.assertEqual(User.objects.count(), 1)
 
+=======
+        
+>>>>>>> login tests
         # And email sent
         self.assertEqual(len(mail.outbox), 1)
         self.assertEqual(mail.outbox[0].subject, 'Log in to healthchecks.io')
