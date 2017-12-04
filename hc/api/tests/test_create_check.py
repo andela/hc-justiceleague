@@ -69,16 +69,22 @@ class CreateCheckTestCase(BaseTestCase):
         self.assertEqual(r["error"], "could not parse request body")
 
     def test_it_rejects_wrong_api_key(self):
-        self.post({"api_key": "wrong"},
+        res = self.post({"api_key": "wrong"},
                   expected_error="wrong api_key")
+        self.assertEqual(res.status_code, 400)
+        self.assertEqual(res.json().get('error'), "wrong api_key")
 
     def test_it_rejects_non_number_timeout(self):
-        self.post({"api_key": "abc", "timeout": "oops"},
+        res = self.post({"api_key": "abc", "timeout": "oops"},
                   expected_error="timeout is not a number")
+        self.assertEqual(res.status_code, 400)
+        self.assertEqual(res.json().get('error'), 'timeout is not a number')
 
     def test_it_rejects_non_string_name(self):
-        self.post({"api_key": "abc", "name": False},
+        res = self.post({"api_key": "abc", "name": False},
                   expected_error="name is not a string")
+        self.assertEqual(res.status_code, 400)
+        self.assertEqual(res.json().get('error'), 'name is not a string')
 
     ### Test for the assignment of channels
     ### Test for the 'timeout is too small' and 'timeout is too large' errors
