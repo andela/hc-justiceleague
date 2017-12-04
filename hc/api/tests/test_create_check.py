@@ -35,8 +35,9 @@ class CreateCheckTestCase(BaseTestCase):
         assert "ping_url" in doc
         self.assertEqual(doc["name"], "Foo")
         self.assertEqual(doc["tags"], "bar,baz")
+        self.assertIsNone(doc.get('last_ping'))
+        self.assertEqual(doc.get('n_pings'), 0)
 
-        ### Assert the expected last_ping and n_pings values
 
         self.assertEqual(Check.objects.count(), 1)
         check = Check.objects.get()
