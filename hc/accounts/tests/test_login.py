@@ -45,7 +45,3 @@ class LoginTestCase(TestCase):
         assert "bad_link" not in self.client.session
 
         ### Any other tests?
-
-
-    
-
