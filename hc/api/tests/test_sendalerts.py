@@ -20,8 +20,10 @@ class SendAlertsTestCase(BaseTestCase):
             check.status = "up"
             check.save()
 
+        ### Assert when Command's handle many that when handle_many should return True
         result = Command().handle_many()
         assert result, "handle_many should return True"
+        self.assertTrue(result, True)
 
         handled_names = []
         for args, kwargs in mock.call_args_list:
@@ -38,5 +40,4 @@ class SendAlertsTestCase(BaseTestCase):
 
         # Expect no exceptions--
         Command().handle_one(check)
-
-    ### Assert when Command's handle many that when handle_many should return True
+        
