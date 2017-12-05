@@ -22,11 +22,19 @@ class LoginTestCase(TestCase):
 
         ### Assert that a user was created
 <<<<<<< HEAD
+<<<<<<< HEAD
         self.assertEqual(User.objects.count(), 1)
 
 =======
         
 >>>>>>> login tests
+=======
+        
+=======
+        self.assertEqual(User.objects.count(), 1)
+
+>>>>>>> 94a4bdb3655149b475072164cbf6ccf2b88510fe
+>>>>>>> bafd611df7e986c6bc86d4aa475d7ad1e2517f8b
         # And email sent
         self.assertEqual(len(mail.outbox), 1)
         self.assertEqual(mail.outbox[0].subject, 'Log in to healthchecks.io')
