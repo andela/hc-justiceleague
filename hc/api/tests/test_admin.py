@@ -10,7 +10,7 @@ class ApiAdminTestCase(BaseTestCase):
         super(ApiAdminTestCase, self).setUp()
         self.check = Check.objects.create(user=self.alice, tags="foo bar")
 
-        ### Set Alice to be staff and superuser and save her :)
+        # Ensure that alice wasn't already superuser
         self.assertFalse(self.alice.is_superuser)
         self.assertFalse(self.alice.is_staff)
 
@@ -28,4 +28,9 @@ class ApiAdminTestCase(BaseTestCase):
         ch = Channel(user=self.alice, kind="pushbullet", value="test-token")
         ch.save()
 
-        ### Assert for the push bullet
+        saved_channel = Channel.objects.get(kind="pushbullet")
+        self.assertIsNot(saved_channel, None)
+        self.assertEqual(saved_channel.kind, "pushbullet")
+        res = self.client.get("/admin/api/channel/")
+
+        self.assertContains(res, "Pushbullet")
