@@ -112,6 +112,16 @@ $(function () {
 
         return false;
     });
+    $(".timeout-grace").click(function() {
+        var $this = $(this);
+
+        $("#update-timeout-form").attr("action", $this.data("url"));
+        periodSlider.noUiSlider.set($this.data("timeout"))
+        graceSlider.noUiSlider.set($this.data("grace"))
+        $('#update-timeout-modal').modal({"show":true, "backdrop":"static"});
+
+        return false;
+    });
 
     $(".check-menu-remove").click(function() {
         var $this = $(this);
@@ -177,6 +187,12 @@ $(function () {
         $(".em", "#show-usage-modal").text(email);
 
         $("#show-usage-modal").modal("show");
+        return false;
+    });
+
+    $(".usage_extends").click(function(e) {
+        $("#update-timeout-modal").modal("hide");
+        $("#show-extends-modal").modal("show");
         return false;
     });
 

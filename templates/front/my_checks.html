@@ -1,10 +1,4 @@
-{% extends "base.html" %}
-{% load compress staticfiles %}
-
-{% block title %}My Checks - healthchecks.io{% endblock %}
-
-
-{% block content %}
+{% extends "base.html" %} {% load compress staticfiles %} {% block title %}My Checks - healthchecks.io{% endblock %} {% block content %}
 <div class="row">
     <div class="col-sm-12">
         <h1>
@@ -17,29 +11,21 @@
     </div>
     {% if tags %}
     <div id="my-checks-tags" class="col-sm-12">
-        {% for tag, count in tags %}
-            {% if tag in down_tags %}
-                <button class="btn btn-danger btn-xs" data-toggle="button">{{ tag }}</button>
-            {% elif tag in grace_tags %}
-                <button class="btn btn-warning btn-xs" data-toggle="button">{{ tag }}</button>
-            {% else %}
-                <button class="btn btn-default btn-xs" data-toggle="button">{{ tag }}</button>
-            {% endif %}
-        {% endfor %}
+        {% for tag, count in tags %} {% if tag in down_tags %}
+        <button class="btn btn-danger btn-xs" data-toggle="button">{{ tag }}</button>
+        {% elif tag in grace_tags %}
+        <button class="btn btn-warning btn-xs" data-toggle="button">{{ tag }}</button>
+        {% else %}
+        <button class="btn btn-default btn-xs" data-toggle="button">{{ tag }}</button>
+        {% endif %} {% endfor %}
     </div>
     {% endif %}
-
 </div>
 <div class="row">
     <div class="col-sm-12">
-
-
-    {% if checks %}
-        {% include "front/my_checks_mobile.html" %}
-        {% include "front/my_checks_desktop.html" %}
-    {% else %}
-    <div class="alert alert-info">You don't have any checks yet.</div>
-    {% endif %}
+        {% if checks %} {% include "front/my_checks_mobile.html" %} {% include "front/my_checks_desktop.html" %} {% else %}
+        <div class="alert alert-info">You don't have any checks yet.</div>
+        {% endif %}
     </div>
 </div>
 <div class="row">
@@ -50,7 +36,6 @@
         </form>
     </div>
 </div>
-
 <div id="update-name-modal" class="modal">
     <div class="modal-dialog">
         <form id="update-name-form" class="form-horizontal" method="post">
@@ -61,45 +46,30 @@
                     <h4 class="update-timeout-title">Name and Tags</h4>
                 </div>
                 <div class="modal-body">
-                        <div class="form-group">
-                            <label for="update-name-input" class="col-sm-2 control-label">
-                                Name
-                            </label>
-                            <div class="col-sm-9">
-                                <input
-                                    id="update-name-input"
-                                    name="name"
-                                    type="text"
-                                    value="---"
-                                    placeholder="unnamed"
-                                    class="input-name form-control" />
-
-                                <span class="help-block">
+                    <div class="form-group">
+                        <label for="update-name-input" class="col-sm-2 control-label">
+                            Name
+                        </label>
+                        <div class="col-sm-9">
+                            <input id="update-name-input" name="name" type="text" value="---" placeholder="unnamed" class="input-name form-control" />
+                            <span class="help-block">
                                     Give this check a human-friendly name,
                                     so you can easily recognize it later.
                                 </span>
-                            </div>
                         </div>
-
-                        <div class="form-group">
-                            <label for="update-tags-input" class="col-sm-2 control-label">
-                                Tags
-                            </label>
-                            <div class="col-sm-9">
-                                <input
-                                    id="update-tags-input"
-                                    name="tags"
-                                    type="text"
-                                    value=""
-                                    placeholder="production www"
-                                    class="form-control" />
-
-                                <span class="help-block">
+                    </div>
+                    <div class="form-group">
+                        <label for="update-tags-input" class="col-sm-2 control-label">
+                            Tags
+                        </label>
+                        <div class="col-sm-9">
+                            <input id="update-tags-input" name="tags" type="text" value="" placeholder="production www" class="form-control" />
+                            <span class="help-block">
                                     Optionally, assign tags for easy filtering.
                                     Separate multiple tags with spaces.
                                 </span>
-                            </div>
                         </div>
+                    </div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
@@ -109,7 +79,6 @@
         </form>
     </div>
 </div>
-
 <div id="update-timeout-modal" class="modal">
     <div class="modal-dialog">
         <form id="update-timeout-form" method="post">
@@ -119,47 +88,73 @@
             <div class="modal-content">
                 <div class="modal-body">
                     <div class="update-timeout-info text-center">
-                        <span
-                            class="update-timeout-label"
-                            data-toggle="tooltip"
-                            title="Expected time between pings.">
+                        <span class="update-timeout-label" data-toggle="tooltip" title="Expected time between pings.">
                             Period
                         </span>
-                        <span
-                            id="period-slider-value"
-                            class="update-timeout-value">
+                        <span id="period-slider-value" class="update-timeout-value">
                             1 day
                         </span>
                     </div>
                     <div id="period-slider"></div>
-
                     <div class="update-timeout-info text-center">
-                        <span
-                            class="update-timeout-label"
-                            data-toggle="tooltip"
-                            title="When check is late, how much time to wait until alert is sent">
+                        <span class="update-timeout-label" data-toggle="tooltip" title="When check is late, how much time to wait until alert is sent">
                             Grace Time
                         </span>
-                        <span
-                            id="grace-slider-value"
-                            class="update-timeout-value">
+                        <span id="grace-slider-value" class="update-timeout-value">
                             1 day
                         </span>
                     </div>
-
                     <div id="grace-slider"></div>
-
                     <div class="update-timeout-terms">
                         <p>
-                            <span>Period</span>
-                            Expected time between pings.
+                            <span>Period</span> Expected time between pings.
                         </p>
                         <p>
-                            <span>Grace Time</span>
-                            When a check is late, how much time to wait until alert is sent.
+                            <span>Grace Time</span> When a check is late, how much time to wait until alert is sent.
                         </p>
                     </div>
-
+                </div>
+                <div class="modal-footer">
+                    <div style="float: left">
+                        <button type="button" class="btn btn-default usage_extends">Advanced Settings</button>
+                    </div>
+                    <div>
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                        <button type="submit" class="btn btn-primary">Save</button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+<div id="show-extends-modal" class="modal">
+    <div class="modal-dialog">
+        <form id="remove-check-form" method="post">
+            {% csrf_token %}
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    <h4 class="remove-check-title">Advanced Settings <span class="remove-check-name"></span></h4>
+                </div>
+                <div class="modal-body">
+                    <p>Set periodically checks
+                        <strong class="remove-check-name"></strong>.
+                    </p>
+                    <label for="periods">Period:</label>
+                    <select class="custom-select" name="period" required>
+                        <option value="">Select a period</option>
+                        <option value="1">Daily</option>
+                        <option value="2">Weekly</option>
+                        <option value="3">Monthly</option>
+                    </select>
+                    <br>
+                    <label for="periods">Grace Time:</label>
+                    <select class="custom-select" name="grace" required>
+                        <option value="">Select grace time period</option>
+                        <option value="1">Daily</option>
+                        <option value="2">Weekly</option>
+                        <option value="3">Monthly</option>
+                    </select>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
@@ -169,7 +164,6 @@
         </form>
     </div>
 </div>
-
 <div id="remove-check-modal" class="modal">
     <div class="modal-dialog">
         <form id="remove-check-form" method="post">
@@ -183,8 +177,7 @@
                     <p>You are about to remove check
                         <strong class="remove-check-name">---</strong>.
                     </p>
-                    <p>Once it's gone there is no "undo" and you cannot get
-                    the old ping URL back.</p>
+                    <p>Once it's gone there is no "undo" and you cannot get the old ping URL back.</p>
                     <p>Are you sure?</p>
                 </div>
                 <div class="modal-footer">
@@ -195,7 +188,6 @@
         </form>
     </div>
 </div>
-
 <div id="show-usage-modal" class="modal">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -227,11 +219,8 @@
                         <a href="#email" data-toggle="tab">Email</a>
                     </li>
                 </ul>
-
             </div>
             <div class="modal-body">
-
-
                 <div class="tab-content">
                     {% with ping_url="<span class='ex'></span>" %}
                     <div role="tabpanel" class="tab-pane active" id="crontab">
@@ -256,16 +245,13 @@
                         {% include "front/snippets/powershell.html" %}
                     </div>
                     <div class="tab-pane" id="email">
-                            As an alternative to HTTP/HTTPS requests,
-                            you can "ping" this check by sending an
-                            email message to
-                            <div class="email-address">
-                                <code class="em"></code>
-                            </div>
+                        As an alternative to HTTP/HTTPS requests, you can "ping" this check by sending an email message to
+                        <div class="email-address">
+                            <code class="em"></code>
+                        </div>
                     </div>
                     {% endwith %}
                 </div>
-
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">Got It!</button>
@@ -273,19 +259,13 @@
         </div>
     </div>
 </div>
-
 <form id="pause-form" method="post">
     {% csrf_token %}
 </form>
-
-{% endblock %}
-
-{% block scripts %}
-{% compress js %}
+{% endblock %} {% block scripts %} {% compress js %}
 <script src="{% static 'js/jquery-2.1.4.min.js' %}"></script>
 <script src="{% static 'js/bootstrap.min.js' %}"></script>
 <script src="{% static 'js/nouislider.min.js' %}"></script>
 <script src="{% static 'js/clipboard.min.js' %}"></script>
 <script src="{% static 'js/checks.js' %}"></script>
-{% endcompress %}
-{% endblock %}
+{% endcompress %} {% endblock %}
