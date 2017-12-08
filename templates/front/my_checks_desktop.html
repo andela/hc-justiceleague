@@ -9,6 +9,7 @@
             <span class="checks-subline">Grace</span>
         </th>
         <th>Last Ping</th>
+        <th>Nag Mode</th>
         <th></th>
     </tr>
     {% for check in checks %}
@@ -73,6 +74,13 @@
             Never
         {% endif %}
         </td>
+
+        <td>
+            <div class="checkbox">
+                <input type="checkbox" data-toggle="toggle" />
+            </div>
+        </td>
+
         <td>
             <div class="check-menu dropdown">
                 <button class="btn btn-sm btn-default dropdown-toggle" type="button" data-toggle="dropdown">
