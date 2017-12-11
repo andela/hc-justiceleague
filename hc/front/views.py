@@ -120,6 +120,9 @@ def docs_api(request):
 def about(request):
     return render(request, "front/about.html", {"page": "about"})
 
+def reports(request):
+    return render(request, "front/reports.html", {"page": "reports"})
+
 
 @login_required
 def add_check(request):
