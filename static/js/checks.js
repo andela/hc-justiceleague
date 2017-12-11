@@ -228,7 +228,13 @@ $(function () {
               nag_time: nagInterval,
               name: 'Test Check via AJAX',
               tags: 'new stuff'
-            }
+            },
+            success: function (res, status, err) {
+                $('#nag-timeout-modal').modal('hide');
+            },
+            error: function (res, status, err) {
+                $('#nag-timeout-modal').modal('hide');
+            },
           });
     });
 
