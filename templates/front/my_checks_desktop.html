@@ -75,11 +75,19 @@
         {% endif %}
         </td>
 
+        <!-- nag -->
         <td>
             <div class="checkbox">
-                <input type="checkbox" data-toggle="toggle" />
+                <span 
+                    data-url="{% url 'hc-update-timeout' check.code %}"
+                    data-timeout="{{ check.nag_timeout.total_seconds }}"
+                    data-nag_mode="{{ check.nag_mode }}"
+                    class="timeout-nag">
+                    <input type="checkbox" data-toggle="toggle" />
+                </span>
             </div>
         </td>
+        <!-- nag -->
 
         <td>
             <div class="check-menu dropdown">

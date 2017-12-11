@@ -87,7 +87,6 @@ $(function () {
         $("#update-timeout-grace").val(rounded);
     });
 
-
     $('[data-toggle="tooltip"]').tooltip();
 
     $(".my-checks-name").click(function() {
@@ -112,6 +111,23 @@ $(function () {
 
         return false;
     });
+
+    // nag-timeout-grace
+    $(".timeout-nag").change(function(event) {
+        var $this = $(this);
+        if (event.target.checked) {
+            var nag_mode = event.target.checked
+            $("#nag-timeout-form").attr("action", $this.data("url"));
+            $('#nag-timeout-modal').modal({"show":true, "backdrop":"static"});
+            console.log(nag_mode)
+        }else{
+            var nag_mode = event.target.checked
+            console.log(nag_mode)
+        }
+        
+        return false;
+    });
+    /*==== nag mode ===== */
 
     $(".check-menu-remove").click(function() {
         var $this = $(this);
@@ -180,7 +196,6 @@ $(function () {
         return false;
     });
 
-
     var clipboard = new Clipboard('button.copy-link');
     $("button.copy-link").mouseout(function(e) {
         setTimeout(function() {
@@ -198,5 +213,23 @@ $(function () {
         prompt("Press Ctrl+C to select:", text)
     });
 
+    // Setting nag time interval
+    $('#submit-nag').click(function (ev) {
+        ev.preventDefault();
+        var csrfToken =  $('input[name="csrfmiddlewaretoken"]').val();
+        var nagInterval = $(':input#nag-grace-input').val();
+        $.ajax({
+            url: '/api/v1/checks/',
+            type: 'POST',
+            beforeSend: function (xhr) {
+              xhr.setRequestHeader('X-CSRFToken', csrfToken)
+            },
+            data: {
+              nag_time: nagInterval,
+              name: 'Test Check via AJAX',
+              tags: 'new stuff'
+            }
+          });
+    });
 
 });

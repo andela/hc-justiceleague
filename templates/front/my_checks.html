@@ -170,6 +170,41 @@
     </div>
 </div>
 
+<!-- nag timeout modal -->
+<div id="nag-timeout-modal" class="modal fade" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <form id="nag-timeout-form" method="post">
+                {% csrf_token %}
+            <div class="modal-content">
+                <div class="modal-header text-center">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h2 class="modal-title">Configure Nag Time</h2>
+                </div>
+                <div class="modal-body">
+                    <div class="row">
+                        <div class="col-md-8">
+                            <input type="hidden" name="nag_mode" id="nag-mode-input" value="">
+                            <div class="form-group">
+                                <label for="nag-grace-input">Nag Grace Time: <span id="nag-grace-time"></span></label>
+                                <div class="input-group">
+                                    <input type="number" min="1" max="7776000" class="form-control" id="nag-grace-input" name="nag_time">
+                                    <div class="input-group-addon">minutes</div>
+                                </div>
+                            </div>
+                            <span id="nag-grace-errors"></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-primary" id="submit-nag">Save</button>
+                </div>
+            </div><!-- /.modal-content -->
+        </form><!-- /form -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+<!--- nag mode -->
+
 <div id="remove-check-modal" class="modal">
     <div class="modal-dialog">
         <form id="remove-check-form" method="post">
