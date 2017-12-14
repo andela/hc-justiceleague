@@ -137,25 +137,90 @@
                 <div class="modal-body row">
                     <div class="set_advanced col-sm-12">
                         <h2>Set your time here:</h2>
-                        <br>
-                        <div class="col-sm-2" style="margin-top: 3px;">
-                            <label>Period:</label>
+                        <div class="row whizz_container">
+                            <div id="time_whizz" class="col-sm-3 text-center whizz_days">
+                                <div class="whizz_value_title row">
+                                    <span><b>Days</b></span>
+                                </div>
+                                <div class="up_whizz flip_whizz row">
+                                    <span class="glyphicon glyphicon-chevron-up"></span>
+                                </div>
+                                <div class="whizz_value row">
+                                    <input type="number" value="00" class="whizz_value_input" id="days">
+                                </div>
+                                <div class="down_whizz flip_whizz row">
+                                    <span class="glyphicon glyphicon-chevron-down"></span>
+                                </div>
+                            </div>
+                            <div id="time_whizz" class="col-sm-3 text-center whizz_hours">
+                                <div class="whizz_value_title row">
+                                    <span><b>Hours</b></span>
+                                </div>
+                                <div class="up_whizz flip_whizz row">
+                                    <span class="glyphicon glyphicon-chevron-up"></span>
+                                </div>
+                                <div class="whizz_value row">
+                                    <input type="number" value="00" class="whizz_value_input" id="hours">
+                                </div>
+                                <div class="down_whizz flip_whizz row">
+                                    <span class="glyphicon glyphicon-chevron-down"></span>
+                                </div>
+                            </div>
+                            <div id="time_whizz" class="col-sm-3 text-center whizz_minutes">
+                                <div class="whizz_value_title row">
+                                    <span><b>Minutes</b></span>
+                                </div>
+                                <div class="up_whizz flip_whizz row">
+                                    <span class="glyphicon glyphicon-chevron-up"></span>
+                                </div>
+                                <div class="whizz_value row">
+                                    <input type="number" value="00" class="whizz_value_input" id="minutes">
+                                </div>
+                                <div class="down_whizz flip_whizz row">
+                                    <span class="glyphicon glyphicon-chevron-down"></span>
+                                </div>
+                            </div>
+                            <div id="time_whizz" class="col-sm-3 text-center whizz_seconds">
+                                <div class="whizz_value_title row">
+                                    <span><b>Seconds</b></span>
+                                </div>
+                                <div class="up_whizz flip_whizz row">
+                                    <span class="glyphicon glyphicon-chevron-up"></span>
+                                </div>
+                                <div class="whizz_value row">
+                                    <input type="number" value="00" class="whizz_value_input" id="seconds">
+                                </div>
+                                <div class="down_whizz flip_whizz row">
+                                    <span class="glyphicon glyphicon-chevron-down"></span>
+                                </div>
+                            </div>
+                            <div class="col-sm-12">
+                                <span class="whizz_pointer">
+                            <span class="glyphicon glyphicon-triangle-bottom
+"></span>
+                                </span>
+                            </div>
                         </div>
-                        <div class="input-group input-group-sm">
-                            <input type="text" class="form-control input-sm" placeholder="DD:HH:MM:SS">
-                            <span class="input-group-addon" id="sizing-addon3">
+                        <div class="whizz_manager col-sm-12">
+                            <div class="col-sm-2" style="margin-top: 3px;">
+                                <label>Period:</label>
+                            </div>
+                            <div class="input-group input-group-sm">
+                                <input type="text" class="form-control input-sm" placeholder="DD:HH:MM:SS">
+                                <span class="input-group-addon trigger-timer" id="sizing-addon3">
                             <span class="glyphicon glyphicon-time"></span>
-                            </span>
-                        </div>
-                        <br>
-                        <div class="col-sm-2" style="margin-top: 3px;">
-                            <label>Grace:</label>
-                        </div>
-                        <div class="input-group input-group-sm">
-                            <input type="text" class="form-control input-sm" placeholder="DD:HH:MM:SS">
-                            <span class="input-group-addon">
+                                </span>
+                            </div>
+                            <br>
+                            <div class="col-sm-2" style="margin-top: 3px;">
+                                <label>Grace:</label>
+                            </div>
+                            <div class="input-group input-group-sm">
+                                <input type="text" class="form-control input-sm" placeholder="DD:HH:MM:SS" id="whizz_output">
+                                <span class="input-group-addon trigger_time_whizz">
                             <span class="glyphicon glyphicon-time"></span>
-                            </span>
+                                </span>
+                            </div>
                         </div>
                     </div>
                     <div class="update-timeout-terms col-sm-12">

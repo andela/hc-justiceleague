@@ -72,6 +72,43 @@
 
 /* Advanced styles */
 
-.set_advanced div {
+.set_advanced .whizz_manager div {
     margin-bottom: 1em;
+}
+.set_advanced #time_whizz {
+    background-color: #eee;
+    width: auto;
+    padding: 0 2em;
+}
+.row.whizz_container {
+    margin: auto;
+}
+#time_whizz .flip_whizz,
+#time_whizz .whizz_value {
+    padding: 1em;
+    margin-top: 1px;
+    border-radius: 3px;
+}
+#time_whizz .flip_whizz {
+    color: #24bc66;
+    margin-bottom: 0.5em;
+}
+#time_whizz .whizz_value .whizz_value_input {
+    border: none;
+    width: 20px;
+    background: none;
+}
+#time_whizz .whizz_value .whizz_value_input:focus {
+    outline: none;
+}
+#time_whizz input[type="number"]::-webkit-inner-spin-button,
+#time_whizz input[type="number"]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+span.whizz_pointer span {
+    top: -5px;
+    left: 25%;
+    font-size: 20px;
+    color: #eee;
 }

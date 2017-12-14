@@ -203,4 +203,88 @@ $(function() {
         var text = e.trigger.getAttribute("data-clipboard-text");
         prompt("Press Ctrl+C to select:", text);
     });
+
+    /* Custom Scripts */
+    $(".trigger_time_whizz").click(function(e) {
+        $("#time_whizz").toggle();
+    });
+    $("#time_whizz .flip_whizz, #time_whizz .whizz_value").hover(
+        function() {
+            $(this).css("background-color", "#ccc");
+        },
+        function() {
+            $(this).css("background-color", "unset");
+        }
+    );
+    $("#time_whizz .whizz_value").click(function(e) {
+        e.preventDefault();
+        var change_focus = $(this).find("input");
+        change_focus.focus();
+    });
+    sec_min_max = 60;
+    hours_max = 24;
+    days_max = 30;
+    $(".up_whizz").click(function(e) {
+        var value_before = $(this)
+            .siblings()
+            .eq(1)
+            .find("input");
+        var value_before_input = value_before.val();
+        value_time = value_before.attr("id");
+        if (value_time == "days") {
+            time_max = days_max;
+        } else if (value_time == "hours") {
+            time_max = hours_max;
+        } else {
+            time_max = sec_min_max;
+        }
+        render_to_whizz_input(value_before_input, value_time);
+        value_before_whizz = parseInt(value_before_input);
+        value_before_whizz = value_before_whizz + 1;
+        if (value_before_whizz < 10) {
+            value_before.val("0" + value_before_whizz);
+        } else if (value_before_whizz >= time_max) {
+            value_before.val("00");
+        } else {
+            value_before.val(value_before_whizz);
+        }
+    });
+    function render_to_whizz_input(value, type) {
+        // console.log($("#whizz_output").val());
+        value_to_load = value + " " + type;
+        // console.log(value_to_load);
+        // $("#whizz_output").val(value_to_load);
+        $("#whizz_output").val(function() {
+            if ($(this).value) return $(this).value + value_to_load;
+            return value_to_load;
+        });
+    }
+    $(".down_whizz").click(function(e) {
+        var value_before = $(this)
+            .siblings()
+            .eq(2)
+            .find("input");
+        value_time = value_before.attr("id");
+        if (value_time == "days") {
+            time_max = days_max;
+        } else if (value_time == "hours") {
+            time_max = hours_max;
+        } else {
+            time_max = sec_min_max;
+        }
+        var value_before_input = value_before.val();
+        value_before_whizz = parseInt(value_before_input);
+        if (value_before_whizz > 0) {
+            value_before_whizz = value_before_whizz - 1;
+            if (value_before_whizz < 10) {
+                value_before.val("0" + value_before_whizz);
+            } else if (value_before_whizz >= sec_min_max) {
+                value_before.val("00");
+            } else {
+                value_before.val(value_before_whizz);
+            }
+        } else {
+            value_before.val("00");
+        }
+    });
 });
