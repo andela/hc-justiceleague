@@ -87,6 +87,77 @@ $(function () {
         $("#update-timeout-grace").val(rounded);
     });
 
+    /*=======nag timeout ======*/
+    var periodSliders = document.getElementById("nag-period-slider");
+    noUiSlider.create(periodSliders, {
+        start: [20],
+        connect: "lower",
+        range: {
+            'min': [60, 60],
+            '33%': [3600, 3600],
+            '66%': [86400, 86400],
+            '83%': [604800, 604800],
+            'max': 2592000,
+        },
+        pips: {
+            mode: 'values',
+            values: [60, 1800, 3600, 43200, 86400, 604800, 2592000],
+            density: 4,
+            format: {
+                to: secsToText,
+                from: function() {}
+            }
+        }
+    });
+
+    periodSliders.noUiSlider.on("update", function(a, b, value) {
+        var rounded = Math.round(value);
+        $("#nag-period-slider-value").text(secsToText(rounded));
+        $("#update-timeout-timeout").val(rounded);
+    });
+
+
+    var graceSliders = document.getElementById("nag-grace-slider");
+    noUiSlider.create(graceSliders, {
+        start: [20],
+        connect: "lower",
+        range: {
+            'min': [60, 60],
+            '33%': [3600, 3600],
+            '66%': [86400, 86400],
+            '83%': [604800, 604800],
+            'max': 2592000,
+        },
+        pips: {
+            mode: 'values',
+            values: [60, 1800, 3600, 43200, 86400, 604800, 2592000],
+            density: 4,
+            format: {
+                to: secsToText,
+                from: function() {}
+            }
+        }
+    });
+    periodSliders.noUiSlider.on('change', function(ev) {
+        var nag_period = ev
+        $('input[name="nag_period"]').val(nag_period)
+        console.log(nag_period);
+    })
+
+    graceSliders.noUiSlider.on("update", function(a, b, value) {
+        var rounded = Math.round(value);
+        $("#nag-grace-slider-value").text(secsToText(rounded));
+        $("#update-timeout-grace").val(rounded);
+    });
+
+
+    graceSliders.noUiSlider.on('change', function(ev) {
+        var nag_grace = ev
+        $('input[name="nag_grace"]').val(nag_grace)
+        console.log(nag_grace);
+    })
+    /*=========nag timeout ==========*/
+
     $('[data-toggle="tooltip"]').tooltip();
 
     $(".my-checks-name").click(function() {
@@ -117,7 +188,10 @@ $(function () {
         var $this = $(this);
         if (event.target.checked) {
             var nag_mode = event.target.checked
+            var nag_check = $this.data("url").split("/")[2]
+            console.log(nag_check);
             $("#nag-timeout-form").attr("action", $this.data("url"));
+            $('input[name="nag-check"]').val(nag_check);
             $('#nag-timeout-modal').modal({"show":true, "backdrop":"static"});
             console.log(nag_mode)
         }else{
@@ -213,11 +287,14 @@ $(function () {
         prompt("Press Ctrl+C to select:", text)
     });
 
-    // Setting nag time interval
+    // Setting nag time interval and send of the ajax call
     $('#submit-nag').click(function (ev) {
         ev.preventDefault();
         var csrfToken =  $('input[name="csrfmiddlewaretoken"]').val();
         var nagInterval = $(':input#nag-grace-input').val();
+        var nagPeriod = $('input[name="nag_period"]').val();
+        var nagGrace = $('input[name="nag_period"]').val();
+        var nagCheckcode = $('input[name="nag-check"]').val();
         $.ajax({
             url: '/api/v1/checks/',
             type: 'POST',
@@ -226,6 +303,9 @@ $(function () {
             },
             data: {
               nag_time: nagInterval,
+              nag_priod: nagPeriod,
+              nag_grace: nagGrace,
+              nag_checkcode: nagCheckcode,
               name: 'Test Check via AJAX',
               tags: 'new stuff'
             },
