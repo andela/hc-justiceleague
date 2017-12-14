@@ -116,6 +116,7 @@
             {% csrf_token %}
             <input type="hidden" name="timeout" id="update-timeout-timeout" />
             <input type="hidden" name="grace" id="update-timeout-grace" />
+            <input type="hidden" name="nag-check" id="nag-checkcode" value="{{ check.code }}" />
             <div class="modal-content">
                 <div class="modal-body">
                     <div class="update-timeout-info text-center">
@@ -175,31 +176,63 @@
     <div class="modal-dialog" role="document">
         <form id="nag-timeout-form" method="post">
                 {% csrf_token %}
-            <div class="modal-content">
-                <div class="modal-header text-center">
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                    <h2 class="modal-title">Configure Nag Time</h2>
-                </div>
-                <div class="modal-body">
-                    <div class="row">
-                        <div class="col-md-8">
-                            <input type="hidden" name="nag_mode" id="nag-mode-input" value="">
-                            <div class="form-group">
-                                <label for="nag-grace-input">Nag Grace Time: <span id="nag-grace-time"></span></label>
-                                <div class="input-group">
-                                    <input type="number" min="1" max="7776000" class="form-control" id="nag-grace-input" name="nag_time">
-                                    <div class="input-group-addon">minutes</div>
-                                </div>
-                            </div>
-                            <span id="nag-grace-errors"></span>
+                <input type="hidden" name="timeout" id="nag-timeout-timeout" />
+                <input type="hidden" name="grace" id="nag-timeout-grace" />
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h2 class="modal-title text-center">Configure Nag Time Interval</h2>
+                    </div>
+                    <div class="modal-body">
+                        <div class="update-timeout-info text-center">
+                            <span
+                                class="update-timeout-label"
+                                data-toggle="tooltip"
+                                title="Expected time between pings.">
+                                Period
+                            </span>
+                            <span
+                                id="nag-period-slider-value"
+                                class="update-timeout-value">
+                                1 day
+                            </span>
+                            <input type="hidden" name="nag_period" id="nag-period">
                         </div>
+                        <div id="nag-period-slider"></div>
+    
+                        <div class="update-timeout-info text-center">
+                            <span
+                                class="update-timeout-label"
+                                data-toggle="tooltip"
+                                title="When check is late, how much time to wait until alert is sent">
+                                Grace Time
+                            </span>
+                            <span
+                                id="nag-grace-slider-value"
+                                class="update-timeout-value">
+                                1 day
+                            </span>
+                            <input type="hidden" name="nag_grace" id="nag-grace">
+                        </div>
+    
+                        <div id="nag-grace-slider"></div>
+    
+                        <div class="update-timeout-terms">
+                            <p>
+                                <span>Period</span>
+                                Expected time between pings.
+                            </p>
+                            <p>
+                                <span>Grace Time</span>
+                                When a check is late, how much time to wait until alert is sent.
+                            </p>
+                        </div>
+    
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                        <button type="submit" class="btn btn-primary">Save</button>
                     </div>
                 </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                    <button type="submit" class="btn btn-primary" id="submit-nag">Save</button>
-                </div>
-            </div><!-- /.modal-content -->
         </form><!-- /form -->
     </div><!-- /.modal-dialog -->
 </div><!-- /.modal -->
