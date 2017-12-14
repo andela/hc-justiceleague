@@ -57,7 +57,14 @@ class Profile(models.Model):
     def send_report(self):
         # reset next report date first:
         now = timezone.now()
+        if self.reports_period == 1:
+            period = 'Daily'
+        elif self.reports_period == 7:
+            period = 'Weekly'
+        else: 
+            period = 'Monthly'
         self.next_report_date = now + timedelta(seconds=self.reports_period)
+       
         self.save()
 
         token = signing.Signer().sign(uuid.uuid4())
@@ -68,7 +75,7 @@ class Profile(models.Model):
             "checks": self.user.check_set.order_by("created"),
             "now": now,
             "unsub_link": unsub_link,
-            "next_report_date": self.reports_period
+            "period": period
         }
 
         emails.report(self.user.email, ctx)
