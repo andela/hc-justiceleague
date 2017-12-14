@@ -128,6 +128,14 @@ def check_token(request, username, token):
 
     return render(request, "accounts/check_token_submit.html")
 
+@login_required
+def reports(request):
+    if request.method == "GET":
+        ctx = {
+            "checks": request.user.check_set.order_by("created")
+            }
+        return render(request, "accounts/reports.html", ctx)
+
 
 @login_required
 def profile(request):
