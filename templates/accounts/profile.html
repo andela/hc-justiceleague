@@ -24,14 +24,55 @@
             <div class="panel-body settings-block">
                 <form method="post">
                     {% csrf_token %}
-                    <h2>Monthly Reports</h2>
+                    <h2>Periodic Reports</h2>
                     <label>
                         <input
                             name="reports_allowed"
                             type="checkbox"
-                            {% if profile.reports_allowed %} checked {% endif %}>
-                        Each month send me a summary of my checks
+                            id="showMyLabels"
+                            {% if profile.reports_allowed %} checked {% endif %}
+                            />
+                        Send me a summary of my checks
                     </label>
+                    <div class="radio", id="showradiobuttons">
+
+                        <div>
+                            <label>
+                                <input
+                                    name="reports_period"
+                                    type="radio"
+                                    value="30"
+                                    class="report_buttons"
+                                    {% if profile.reports_period == 30 %} checked {% endif %}
+                                    >
+                                Monthly Reports
+                            </label>
+                        </div>
+                        <div>
+                            <label>
+                                <input
+                                    name="reports_period"
+                                    type="radio"
+                                    value="7"
+                                    class="report_buttons"
+                                    {% if profile.reports_period == 7 %} checked {% endif %}
+                                    >
+                                Weekly Reports
+                            </label>
+                        </div>
+                        <div>
+                            <label>
+                                <input
+                                    name="reports_period"
+                                    type="radio"
+                                    value="1"
+                                    class="report_buttons"
+                                    {% if profile.reports_period == 1%} checked {% endif %}
+                                    >
+                                Daily Reports
+                            </label>
+                        </div>
+                    </div>
                     <button
                         name="update_reports_allowed"
                         type="submit"
