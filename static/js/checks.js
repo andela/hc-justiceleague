@@ -1,18 +1,17 @@
-$(function () {
-
-    var MINUTE = {name: "minute", nsecs: 60};
-    var HOUR = {name: "hour", nsecs: MINUTE.nsecs * 60};
-    var DAY = {name: "day", nsecs: HOUR.nsecs * 24};
-    var WEEK = {name: "week", nsecs: DAY.nsecs * 7};
+$(function() {
+    var MINUTE = { name: "minute", nsecs: 60 };
+    var HOUR = { name: "hour", nsecs: MINUTE.nsecs * 60 };
+    var DAY = { name: "day", nsecs: HOUR.nsecs * 24 };
+    var WEEK = { name: "week", nsecs: DAY.nsecs * 7 };
     var UNITS = [WEEK, DAY, HOUR, MINUTE];
 
     var secsToText = function(total) {
         var remainingSeconds = Math.floor(total);
         var result = "";
-        for (var i=0, unit; unit=UNITS[i]; i++) {
+        for (var i = 0, unit; (unit = UNITS[i]); i++) {
             if (unit === WEEK && remainingSeconds % unit.nsecs != 0) {
                 // Say "8 days" instead of "1 week 1 day"
-                continue
+                continue;
             }
 
             var count = Math.floor(remainingSeconds / unit.nsecs);
@@ -28,21 +27,21 @@ $(function () {
         }
 
         return result;
-    }
+    };
 
     var periodSlider = document.getElementById("period-slider");
     noUiSlider.create(periodSlider, {
         start: [20],
         connect: "lower",
         range: {
-            'min': [60, 60],
-            '33%': [3600, 3600],
-            '66%': [86400, 86400],
-            '75%': [604800, 604800],
-            'max': 5184000,
+            min: [60, 60],
+            "33%": [3600, 3600],
+            "66%": [86400, 86400],
+            "75%": [604800, 604800],
+            max: 5184000
         },
         pips: {
-            mode: 'values',
+            mode: "values",
             values: [60, 1800, 3600, 43200, 86400, 604800, 2592000, 5184000],
             density: 4,
             format: {
@@ -58,20 +57,19 @@ $(function () {
         $("#update-timeout-timeout").val(rounded);
     });
 
-
     var graceSlider = document.getElementById("grace-slider");
     noUiSlider.create(graceSlider, {
         start: [20],
         connect: "lower",
         range: {
-            'min': [60, 60],
-            '33%': [3600, 3600],
-            '66%': [86400, 86400],
-            '75%': [604800, 604800],
-            'max': 5184000,
+            min: [60, 60],
+            "33%": [3600, 3600],
+            "66%": [86400, 86400],
+            "75%": [604800, 604800],
+            max: 5184000
         },
         pips: {
-            mode: 'values',
+            mode: "values",
             values: [60, 1800, 3600, 43200, 86400, 604800, 2592000, 5184000],
             density: 4,
             format: {
@@ -87,7 +85,6 @@ $(function () {
         $("#update-timeout-grace").val(rounded);
     });
 
-
     $('[data-toggle="tooltip"]').tooltip();
 
     $(".my-checks-name").click(function() {
@@ -96,7 +93,7 @@ $(function () {
         $("#update-name-form").attr("action", $this.data("url"));
         $("#update-name-input").val($this.data("name"));
         $("#update-tags-input").val($this.data("tags"));
-        $('#update-name-modal').modal("show");
+        $("#update-name-modal").modal("show");
         $("#update-name-input").focus();
 
         return false;
@@ -106,20 +103,19 @@ $(function () {
         var $this = $(this);
 
         $("#update-timeout-form").attr("action", $this.data("url"));
-        periodSlider.noUiSlider.set($this.data("timeout"))
-        graceSlider.noUiSlider.set($this.data("grace"))
-        $('#update-timeout-modal').modal({"show":true, "backdrop":"static"});
+        periodSlider.noUiSlider.set($this.data("timeout"));
+        graceSlider.noUiSlider.set($this.data("grace"));
+        $("#update-timeout-modal").modal({ show: true, backdrop: "static" });
+        $("#show-advanced-time").modal("hide");
 
         return false;
     });
-    $(".timeout-grace").click(function() {
+
+    $(".advanced-time").click(function() {
         var $this = $(this);
 
-        $("#update-timeout-form").attr("action", $this.data("url"));
-        periodSlider.noUiSlider.set($this.data("timeout"))
-        graceSlider.noUiSlider.set($this.data("grace"))
-        $('#update-timeout-modal').modal({"show":true, "backdrop":"static"});
-
+        $("#update-timeout-modal").modal("hide");
+        $("#show-advanced-time").modal("show");
         return false;
     });
 
@@ -128,16 +124,15 @@ $(function () {
 
         $("#remove-check-form").attr("action", $this.data("url"));
         $(".remove-check-name").text($this.data("name"));
-        $('#remove-check-modal').modal("show");
+        $("#remove-check-modal").modal("show");
 
         return false;
     });
 
-
     $("#my-checks-tags button").click(function() {
         // .active has not been updated yet by bootstrap code,
         // so cannot use it
-        $(this).toggleClass('checked');
+        $(this).toggleClass("checked");
 
         // Make a list of currently checked tags:
         var checked = [];
@@ -153,8 +148,10 @@ $(function () {
         }
 
         function applyFilters(index, element) {
-            var tags = $(".my-checks-name", element).data("tags").split(" ");
-            for (var i=0, tag; tag=checked[i]; i++) {
+            var tags = $(".my-checks-name", element)
+                .data("tags")
+                .split(" ");
+            for (var i = 0, tag; (tag = checked[i]); i++) {
                 if (tags.indexOf(tag) == -1) {
                     $(element).hide();
                     return;
@@ -168,15 +165,15 @@ $(function () {
         $("#checks-table tr.checks-row").each(applyFilters);
         // Mobile: for each list item, see if it needs to be shown or hidden
         $("#checks-list > li").each(applyFilters);
-
     });
 
     $(".pause-check").click(function(e) {
         var url = e.target.getAttribute("data-url");
-        $("#pause-form").attr("action", url).submit();
+        $("#pause-form")
+            .attr("action", url)
+            .submit();
         return false;
     });
-
 
     $(".usage-examples").click(function(e) {
         var a = e.target;
@@ -190,29 +187,20 @@ $(function () {
         return false;
     });
 
-    $(".usage_extends").click(function(e) {
-        $("#update-timeout-modal").modal("hide");
-        $("#show-extends-modal").modal("show");
-        return false;
-    });
-
-
-    var clipboard = new Clipboard('button.copy-link');
+    var clipboard = new Clipboard("button.copy-link");
     $("button.copy-link").mouseout(function(e) {
         setTimeout(function() {
             e.target.textContent = "copy";
         }, 300);
-    })
+    });
 
-    clipboard.on('success', function(e) {
+    clipboard.on("success", function(e) {
         e.trigger.textContent = "copied!";
         e.clearSelection();
     });
 
-    clipboard.on('error', function(e) {
+    clipboard.on("error", function(e) {
         var text = e.trigger.getAttribute("data-clipboard-text");
-        prompt("Press Ctrl+C to select:", text)
+        prompt("Press Ctrl+C to select:", text);
     });
-
-
 });
