@@ -8,7 +8,8 @@ $(function() {
     var secsToText = function(total) {
         var remainingSeconds = Math.floor(total);
         var result = "";
-        for (var i = 0, unit; (unit = UNITS[i]); i++) {
+        for (var i = 0, unit;
+            (unit = UNITS[i]); i++) {
             if (unit === WEEK && remainingSeconds % unit.nsecs != 0) {
                 // Say "8 days" instead of "1 week 1 day"
                 continue;
@@ -151,7 +152,8 @@ $(function() {
             var tags = $(".my-checks-name", element)
                 .data("tags")
                 .split(" ");
-            for (var i = 0, tag; (tag = checked[i]); i++) {
+            for (var i = 0, tag;
+                (tag = checked[i]); i++) {
                 if (tags.indexOf(tag) == -1) {
                     $(element).hide();
                     return;
@@ -205,8 +207,28 @@ $(function() {
     });
 
     /* Custom Scripts */
-    $(".trigger_time_whizz").click(function(e) {
-        $("#time_whizz").toggle();
+    $(".trigger_time_period, .trigger_time_grace").click(function(e) {
+        kind = e.target.getAttribute("data-kind")
+        if (!$(".whizz_container").attr('id')) {
+            $(".whizz_container :input").each(function() {
+                $(this).val('00');
+            });
+            $(".whizz_container").attr('id', "whizz_" + kind)
+            $("#whizz_" + kind).show();
+        } else if ($(".whizz_container").attr('id') && $(".whizz_container").attr('id') != "whizz_" + kind) {
+            $(".whizz_container :input").each(function() {
+                $(this).val('00');
+            });
+            $(".whizz_container").attr('id', "whizz_" + kind)
+            $(".whizz_container").show();
+        } else if ($(".whizz_container").attr('id') == "whizz_" + kind) {
+            $(".whizz_container :input").each(function() {
+                $(this).val('00');
+            });
+            $(".whizz_container").removeAttr('id')
+            $(".whizz_container").hide();
+        }
+
     });
     $("#time_whizz .flip_whizz, #time_whizz .whizz_value").hover(
         function() {
@@ -223,7 +245,7 @@ $(function() {
     });
     sec_min_max = 60;
     hours_max = 24;
-    days_max = 30;
+    days_max = 61;
     $(".up_whizz").click(function(e) {
         var value_before = $(this)
             .siblings()
@@ -238,27 +260,19 @@ $(function() {
         } else {
             time_max = sec_min_max;
         }
-        render_to_whizz_input(value_before_input, value_time);
         value_before_whizz = parseInt(value_before_input);
         value_before_whizz = value_before_whizz + 1;
-        if (value_before_whizz < 10) {
+        if (isNaN(value_before_whizz)) {
+            value_before.val("00");
+        } else if (value_before_whizz < 10) {
             value_before.val("0" + value_before_whizz);
         } else if (value_before_whizz >= time_max) {
             value_before.val("00");
         } else {
             value_before.val(value_before_whizz);
         }
+        render_to_whizz_input();
     });
-    function render_to_whizz_input(value, type) {
-        // console.log($("#whizz_output").val());
-        value_to_load = value + " " + type;
-        // console.log(value_to_load);
-        // $("#whizz_output").val(value_to_load);
-        $("#whizz_output").val(function() {
-            if ($(this).value) return $(this).value + value_to_load;
-            return value_to_load;
-        });
-    }
     $(".down_whizz").click(function(e) {
         var value_before = $(this)
             .siblings()
@@ -274,7 +288,9 @@ $(function() {
         }
         var value_before_input = value_before.val();
         value_before_whizz = parseInt(value_before_input);
-        if (value_before_whizz > 0) {
+        if (isNaN(value_before_whizz)) {
+            value_before.val("00");
+        } else if (value_before_whizz > 0) {
             value_before_whizz = value_before_whizz - 1;
             if (value_before_whizz < 10) {
                 value_before.val("0" + value_before_whizz);
@@ -286,5 +302,61 @@ $(function() {
         } else {
             value_before.val("00");
         }
+        render_to_whizz_input();
     });
+
+    function render_to_whizz_input() {
+
+        arr = [];
+        seconds = []
+        var value_kind = $(".whizz_container").attr('id')
+        for (var i = 0; i <= 3; i++) {
+            whizz_all = $("#" + value_kind)
+                .children()
+                .eq(i)
+                .children()
+                .eq(2)
+                .find("input");
+            str = whizz_all.attr("id");
+            whizz_value = parseInt(whizz_all.val());
+            if (whizz_value != 0) {
+                if (whizz_value == 1) {
+                    whizz_type = str.substring("s", str.length - 1);
+                    whizz_valued = whizz_value + " " + whizz_type;
+                    $(".output" + "_" + value_kind).val() + whizz_valued;
+                    arr.push(whizz_valued);
+                    seconds.push(to_seconds(whizz_value, str))
+                } else {
+                    whizz_type = whizz_all.attr("id");
+                    whizz_valued = whizz_value + " " + whizz_type;
+                    $(".output" + "_" + value_kind).val() + whizz_valued;
+                    arr.push(whizz_valued);
+                    seconds.push(to_seconds(whizz_value, str))
+                }
+            }
+        }
+        if (seconds.length != 0) {
+            var _to_submit = seconds.reduce(function(a, b) {
+                return a + b;
+            });
+        } else { var _to_submit = 0 }
+        $("." + value_kind + "_to_submit").val(_to_submit)
+        var whizz_str = arr.toString();
+        var whizz_final = whizz_str.split(",").join(" ")
+        $(".output" + "_" + value_kind).val(whizz_final);
+    }
+
+    function to_seconds(value, type) {
+        if (type == "days") {
+            return value * 86400
+        } else if (type == "hours") {
+            return value * 3600
+        } else if (type == "minutes") {
+            return value * 60
+        } else if (type == "seconds") {
+            return value
+        } else {
+            return false
+        }
+    }
 });

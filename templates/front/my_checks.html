@@ -194,21 +194,16 @@
                                     <span class="glyphicon glyphicon-chevron-down"></span>
                                 </div>
                             </div>
-                            <div class="col-sm-12">
-                                <span class="whizz_pointer">
-                            <span class="glyphicon glyphicon-triangle-bottom
-"></span>
-                                </span>
-                            </div>
                         </div>
                         <div class="whizz_manager col-sm-12">
                             <div class="col-sm-2" style="margin-top: 3px;">
                                 <label>Period:</label>
                             </div>
                             <div class="input-group input-group-sm">
-                                <input type="text" class="form-control input-sm" placeholder="DD:HH:MM:SS">
-                                <span class="input-group-addon trigger-timer" id="sizing-addon3">
-                            <span class="glyphicon glyphicon-time"></span>
+                                <input type="hidden" name="advanced_period" class="whizz_period_to_submit">
+                                <input type="text" class="form-control input-sm output_whizz_period" placeholder="DD:HH:MM:SS" id="whizz_output">
+                                <span class="input-group-addon trigger_time_period" data-kind="period">
+                                    <span class="glyphicon glyphicon-time trigger_period" data-kind="period"></span>
                                 </span>
                             </div>
                             <br>
@@ -216,9 +211,10 @@
                                 <label>Grace:</label>
                             </div>
                             <div class="input-group input-group-sm">
-                                <input type="text" class="form-control input-sm" placeholder="DD:HH:MM:SS" id="whizz_output">
-                                <span class="input-group-addon trigger_time_whizz">
-                            <span class="glyphicon glyphicon-time"></span>
+                                <input type="text" class="form-control input-sm output_whizz_grace" placeholder="DD:HH:MM:SS" id="whizz_output">
+                                <input type="hidden" name="advanced_grace" class="whizz_grace_to_submit">
+                                <span class="input-group-addon trigger_time_grace" data-kind="grace">
+                                    <span class="glyphicon glyphicon-time trigger_grace" data-kind="grace"></span>
                                 </span>
                             </div>
                         </div>

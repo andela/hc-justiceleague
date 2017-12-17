@@ -71,7 +71,9 @@
 }
 
 /* Advanced styles */
-
+#show-advanced-time .modal-dialog {
+    width: 50%;
+}
 .set_advanced .whizz_manager div {
     margin-bottom: 1em;
 }
@@ -107,8 +109,15 @@
     margin: 0;
 }
 span.whizz_pointer span {
-    top: -5px;
-    left: 25%;
+    left: -4.2%;
     font-size: 20px;
     color: #eee;
+    position: absolute;
+}
+.whizz_container {
+    position: absolute;
+    right: 5%;
+    top: 0;
+    z-index: 3;
+    display: none;
 }
