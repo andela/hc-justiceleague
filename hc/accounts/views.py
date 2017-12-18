@@ -9,7 +9,7 @@ from django.contrib.auth.decorators import login_required
 from django.contrib.auth.hashers import check_password
 from django.contrib.auth.models import User
 from django.core import signing
-from django.http import HttpResponseForbidden, HttpResponseBadRequest
+from django.http import HttpResponseForbidden, HttpResponseBadRequest, HttpResponse
 from django.shortcuts import redirect, render
 from hc.accounts.forms import (EmailPasswordForm, InviteTeamMemberForm,
                                RemoveTeamMemberForm, ReportSettingsForm,
@@ -128,6 +128,14 @@ def check_token(request, username, token):
 
     return render(request, "accounts/check_token_submit.html")
 
+@login_required
+def reports(request):
+    if request.method == "GET":
+        ctx = {
+            "checks": request.user.check_set.order_by("created")
+            }
+        return render(request, "accounts/reports.html", ctx)
+
 
 @login_required
 def profile(request):
@@ -157,6 +165,7 @@ def profile(request):
             form = ReportSettingsForm(request.POST)
             if form.is_valid():
                 profile.reports_allowed = form.cleaned_data["reports_allowed"]
+                profile.reports_period = form.cleaned_data["reports_period"]
                 profile.save()
                 messages.success(request, "Your settings have been updated!")
         elif "invite_team_member" in request.POST:
