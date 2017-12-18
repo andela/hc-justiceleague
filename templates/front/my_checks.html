@@ -89,20 +89,20 @@
                 <div class="modal-body">
                     <div class="update-timeout-info text-center">
                         <span class="update-timeout-label" data-toggle="tooltip" title="Expected time between pings.">
-                            Period
-                        </span>
+                                Period
+                            </span>
                         <span id="period-slider-value" class="update-timeout-value">
-                            1 day
-                        </span>
+                                1 day
+                            </span>
                     </div>
                     <div id="period-slider"></div>
                     <div class="update-timeout-info text-center">
                         <span class="update-timeout-label" data-toggle="tooltip" title="When check is late, how much time to wait until alert is sent">
-                            Grace Time
-                        </span>
+                                Grace Time
+                            </span>
                         <span id="grace-slider-value" class="update-timeout-value">
-                            1 day
-                        </span>
+                                1 day
+                            </span>
                     </div>
                     <div id="grace-slider"></div>
                     <div class="update-timeout-terms">
@@ -115,7 +115,7 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <div style="float: left" class="advanced-time">
+                    <div style="float: left" class="advanced-time" id="advanced-settings">
                         <button type="button" class="btn btn-default" data-dismiss="modal">Advanced Settings</button>
                     </div>
                     <div>
@@ -129,10 +129,8 @@
 </div>
 <div id="show-advanced-time" class="modal">
     <div class="modal-dialog">
-        <form id="update-timeout-form" method="post" class="form-inline form-group">
+        <form id="update-advanced-timeout-form" method="post" class="form-inline form-group">
             {% csrf_token %}
-            <input type="hidden" name="timeout" id="update-timeout-timeout" />
-            <input type="hidden" name="grace" id="update-timeout-grace" />
             <div class="modal-content">
                 <div class="modal-body row">
                     <div class="set_advanced col-sm-12">
@@ -194,6 +192,12 @@
                                     <span class="glyphicon glyphicon-chevron-down"></span>
                                 </div>
                             </div>
+                            <div class="col-sm-12">
+                                <span class="whizz_pointer">
+                                    <span class="glyphicon glyphicon-triangle-left
+"></span>
+                                </span>
+                            </div>
                         </div>
                         <div class="whizz_manager col-sm-12">
                             <div class="col-sm-2" style="margin-top: 3px;">
@@ -201,7 +205,7 @@
                             </div>
                             <div class="input-group input-group-sm">
                                 <input type="hidden" name="advanced_period" class="whizz_period_to_submit">
-                                <input type="text" class="form-control input-sm output_whizz_period" placeholder="DD:HH:MM:SS" id="whizz_output">
+                                <input type="text" class="form-control input-sm output_whizz_period" placeholder="DD:HH:MM:SS" id="whizz_output" required>
                                 <span class="input-group-addon trigger_time_period" data-kind="period">
                                     <span class="glyphicon glyphicon-time trigger_period" data-kind="period"></span>
                                 </span>
@@ -211,7 +215,7 @@
                                 <label>Grace:</label>
                             </div>
                             <div class="input-group input-group-sm">
-                                <input type="text" class="form-control input-sm output_whizz_grace" placeholder="DD:HH:MM:SS" id="whizz_output">
+                                <input type="text" class="form-control input-sm output_whizz_grace" placeholder="DD:HH:MM:SS" id="whizz_output" required>
                                 <input type="hidden" name="advanced_grace" class="whizz_grace_to_submit">
                                 <span class="input-group-addon trigger_time_grace" data-kind="grace">
                                     <span class="glyphicon glyphicon-time trigger_grace" data-kind="grace"></span>

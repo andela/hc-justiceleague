@@ -54,6 +54,7 @@
                 data-url="{% url 'hc-update-timeout' check.code %}"
                 data-timeout="{{ check.timeout.total_seconds }}"
                 data-grace="{{ check.grace.total_seconds }}"
+                data-advanced="{% url 'hc-advanced-timeout' check.code %}"
                 class="timeout-grace">
                 {{ check.timeout|hc_duration }}
                 <br />

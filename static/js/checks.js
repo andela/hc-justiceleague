@@ -103,6 +103,7 @@ $(function() {
     $(".timeout-grace").click(function() {
         var $this = $(this);
 
+        $("#advanced-settings").attr("data-advanced", $this.data("advanced"))
         $("#update-timeout-form").attr("action", $this.data("url"));
         periodSlider.noUiSlider.set($this.data("timeout"));
         graceSlider.noUiSlider.set($this.data("grace"));
@@ -115,6 +116,7 @@ $(function() {
     $(".advanced-time").click(function() {
         var $this = $(this);
 
+        $("#update-advanced-timeout-form").attr("action", $this.data("advanced"));
         $("#update-timeout-modal").modal("hide");
         $("#show-advanced-time").modal("show");
         return false;
@@ -214,11 +216,13 @@ $(function() {
                 $(this).val('00');
             });
             $(".whizz_container").attr('id', "whizz_" + kind)
+            move_pointer(kind)
             $("#whizz_" + kind).show();
         } else if ($(".whizz_container").attr('id') && $(".whizz_container").attr('id') != "whizz_" + kind) {
             $(".whizz_container :input").each(function() {
                 $(this).val('00');
             });
+            move_pointer(kind)
             $(".whizz_container").attr('id', "whizz_" + kind)
             $(".whizz_container").show();
         } else if ($(".whizz_container").attr('id') == "whizz_" + kind) {
@@ -230,6 +234,15 @@ $(function() {
         }
 
     });
+    // Move the pointer pointing to the time inputs
+    function move_pointer(type){
+        if (type == "grace"){
+            $(".whizz_pointer span").css('top', '-75px')
+        }
+        else{
+            $(".whizz_pointer span").css('top', '-125px') 
+        }
+    }
     $("#time_whizz .flip_whizz, #time_whizz .whizz_value").hover(
         function() {
             $(this).css("background-color", "#ccc");
@@ -317,8 +330,8 @@ $(function() {
                 .children()
                 .eq(2)
                 .find("input");
-            str = whizz_all.attr("id");
             whizz_value = parseInt(whizz_all.val());
+            str = whizz_all.attr("id");
             if (whizz_value != 0) {
                 if (whizz_value == 1) {
                     whizz_type = str.substring("s", str.length - 1);
