@@ -80,7 +80,9 @@
                     <li {% if page == 'channels' %} class="active" {% endif %}>
                         <a href="{% url 'hc-channels' %}">Integrations</a>
                     </li>
-
+                    <li {% if page == 'reports' %} class="active" {% endif %}>
+                        <a href="{% url 'hc-reports' %}">Reports</a>
+                    </li>
                 {% endif %}
 
 
