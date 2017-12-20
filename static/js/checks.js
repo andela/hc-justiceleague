@@ -88,8 +88,10 @@ $(function () {
     });
 
     /*=======nag timeout ======*/
-    var periodSliders = document.getElementById("nag-period-slider");
-    noUiSlider.create(periodSliders, {
+    /* Render noUIslider slider component into div with ID `nag-period-slider`
+    */
+    var nagPeriodSlider = document.getElementById("nag-period-slider");
+    noUiSlider.create(nagPeriodSlider, {
         start: [20],
         connect: "lower",
         range: {
@@ -110,10 +112,11 @@ $(function () {
         }
     });
 
-    periodSliders.noUiSlider.on("update", function(a, b, value) {
+    nagPeriodSlider.noUiSlider.on("update", function(a, b, value) {
         var rounded = Math.round(value);
         $("#nag-period-slider-value").text(secsToText(rounded));
-        $("#update-timeout-timeout").val(rounded);
+        $("#update-timeout-nag").val(rounded);
+        console.log('Nag value is ' + $("#update-timeout-nag").val());
     });
 
 
@@ -138,7 +141,7 @@ $(function () {
             }
         }
     });
-    periodSliders.noUiSlider.on('change', function(ev) {
+    nagPeriodSlider.noUiSlider.on('change', function(ev) {
         var nag_period = ev
         $('input[name="nag_period"]').val(nag_period)
         console.log(nag_period);
@@ -198,7 +201,7 @@ $(function () {
             var nag_mode = event.target.checked
             console.log(nag_mode)
         }
-        
+
         return false;
     });
     /*==== nag mode ===== */
@@ -287,35 +290,9 @@ $(function () {
         prompt("Press Ctrl+C to select:", text)
     });
 
-    // Setting nag time interval and send of the ajax call
+    // Hide modal after saving nag
     $('#submit-nag').click(function (ev) {
-        ev.preventDefault();
-        var csrfToken =  $('input[name="csrfmiddlewaretoken"]').val();
-        var nagInterval = $(':input#nag-grace-input').val();
-        var nagPeriod = $('input[name="nag_period"]').val();
-        var nagGrace = $('input[name="nag_period"]').val();
-        var nagCheckcode = $('input[name="nag-check"]').val();
-        $.ajax({
-            url: '/api/v1/checks/',
-            type: 'POST',
-            beforeSend: function (xhr) {
-              xhr.setRequestHeader('X-CSRFToken', csrfToken)
-            },
-            data: {
-              nag_time: nagInterval,
-              nag_priod: nagPeriod,
-              nag_grace: nagGrace,
-              nag_checkcode: nagCheckcode,
-              name: 'Test Check via AJAX',
-              tags: 'new stuff'
-            },
-            success: function (res, status, err) {
-                $('#nag-timeout-modal').modal('hide');
-            },
-            error: function (res, status, err) {
-                $('#nag-timeout-modal').modal('hide');
-            },
-          });
+        $('#nag-timeout-modal').modal('hide');
     });
 
 });

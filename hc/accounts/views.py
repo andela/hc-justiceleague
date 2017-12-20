@@ -18,6 +18,12 @@ from hc.accounts.models import Profile, Member
 from hc.api.models import Channel, Check
 from hc.lib.badges import get_badge_url
 
+NAG_CHOICES = (
+    ('1', '10 minutes'),
+    ('2', '30 minutes'),
+    ('3', '1 Hours')
+)
+
 
 def _make_user(email):
     username = str(uuid.uuid4())[:30]
@@ -104,6 +110,12 @@ def check_token(request, username, token):
     if request.user.is_authenticated and request.user.username == username:
         # User is already logged in
         return redirect("hc-checks")
+    elif "update-nag-user" in request.POST:
+        form = ReportSettingsForm(request.POST)
+        if form.is_valid():
+            profile.nag_allowed = request.POST.get("nag_allowed", NAG_CHOICES)
+            profile.save()
+            messages.success(request, "Your settings have been updated")
 
     # Some email servers open links in emails to check for malicious content.
     # To work around this, we sign user in if the method is POST.

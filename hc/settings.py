@@ -139,7 +139,19 @@ STATICFILES_FINDERS = (
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 COMPRESS_OFFLINE = True
 
+""" Using GMAIL SMTP server for email relay
+In production, uncomment lines beginning with with "##" and comment out
+DJMAIL_REAL_BACKEND and the first EMAIL_BACKEND declaration.
+"""
+## EMAIL_USE_TLS = True
+## EMAIL_HOST = 'smtp.gmail.com'
+## EMAIL_HOST_USER = os.environ.get('HC_GMAIL_USER')
+## EMAIL_HOST_PASSWORD = os.environ.get('HC_GMAIL_PASS')
+## EMAIL_PORT = 587
+
 EMAIL_BACKEND = "djmail.backends.default.EmailBackend"
+## EMAIL_BACKEND = "django.core.mail.backends.smtp.emailbackend"
+DJMAIL_REAL_BACKEND="django.core.mail.backends.console.EmailBackend"
 
 # Slack integration -- override these in local_settings
 SLACK_CLIENT_ID = None
