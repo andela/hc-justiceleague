@@ -22,7 +22,8 @@ def ping(request, code):
         return HttpResponseBadRequest()
 
     check.n_pings = F("n_pings") + 1
-    ping_diff = timezone.now() - check.last_ping
+    if check.last_ping is not None:
+        ping_diff = timezone.now() - check.last_ping
     check.last_ping = timezone.now()
     if check.status in ("new", "paused"):
         check.status = "up"
