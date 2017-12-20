@@ -104,6 +104,10 @@ $(function() {
         var $this = $(this);
 
         $("#advanced-settings").attr("data-advanced", $this.data("advanced"))
+        $(".output_whizz_grace").val(secsToText(Math.round($this.data("grace"))))
+        $(".output_whizz_period").val(secsToText(Math.round($this.data("timeout"))))
+        $("#advanced-settings").attr("data-grace", $this.data("grace"))
+        $("#advanced-settings").attr("data-period", $this.data("timeout"))
         $("#update-timeout-form").attr("action", $this.data("url"));
         periodSlider.noUiSlider.set($this.data("timeout"));
         graceSlider.noUiSlider.set($this.data("grace"));
@@ -113,9 +117,8 @@ $(function() {
         return false;
     });
 
-    $(".advanced-time").click(function() {
+    $("#advanced-settings").click(function() {
         var $this = $(this);
-
         $("#update-advanced-timeout-form").attr("action", $this.data("advanced"));
         $("#update-timeout-modal").modal("hide");
         $("#show-advanced-time").modal("show");
@@ -233,6 +236,12 @@ $(function() {
             $(".whizz_container").hide();
         }
 
+    });
+    $(".output_whizz_grace").focus(function(){
+        $(".trigger_time_grace").click();
+    });
+    $(".output_whizz_period").focus(function(){
+        $(".trigger_time_period").click();
     });
     // Move the pointer pointing to the time inputs
     function move_pointer(type){
