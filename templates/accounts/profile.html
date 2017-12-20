@@ -25,9 +25,6 @@
                 <form method="post">
                     {% csrf_token %}
                     <h2>Periodic Reports</h2>
-                    Send me a summary of my checks
-                    <br>
-                    <br>
                     <label>
                         <input
                             name="reports_allowed"
@@ -40,16 +37,6 @@
                         <input
                             name="reports_allowed"
                             type="checkbox"
-                            {% if profile.reports_allowed %} checked {% endif %}>
-                        Each week
-                    </label>
-                    <br>
-                    <label>
-                        <input
-                            name="reports_allowed"
-                            type="checkbox"
-                            {% if profile.reports_allowed %} checked {% endif %}>
-                        Each month
                     </label>
                     <button
                         name="update_reports_allowed"
