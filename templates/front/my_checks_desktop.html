@@ -4,6 +4,7 @@
         <th></th>
         <th class="th-name">Name</th>
         <th>Ping URL</th>
+        <th>Priority</th>
         <th class="th-period">
             Period <br />
             <span class="checks-subline">Grace</span>
@@ -48,6 +49,15 @@
                 data-clipboard-text="{{ check.url }}">
                 copy
             </button>
+        </td>
+        <td class="priority-cell">
+           <select name="priority" id="" class="form-control">
+               <option value="2">Emergency</option>
+               <option value="1">High</option>
+               <option selected value="0">Normal</option>
+               <option value="-1">Low</option>
+               <option value="-2">Lowest</option>
+           </select> 
         </td>
         <td class="timeout-cell">
             <span
