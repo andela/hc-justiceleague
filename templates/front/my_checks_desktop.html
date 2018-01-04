@@ -79,11 +79,15 @@
         <!-- nag -->
         <td>
             <div class="checkbox">
-                <span 
+                <span
                     data-url="{% url 'hc-update-timeout' check.code %}"
                     data-timeout="{{ check.nag_timeout.total_seconds }}"
                     class="timeout-nag">
-                    <input type="checkbox" data-toggle="toggle" />
+                  {% if check.nag %}
+                    <input type="checkbox" checked data-toggle="toggle"/>
+                  {% else %}
+                    <input type="checkbox" data-toggle="toggle"/>
+                  {% endif %}
                 </span>
             </div>
         </td>
