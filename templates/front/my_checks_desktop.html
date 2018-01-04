@@ -9,6 +9,7 @@
             <span class="checks-subline">Grace</span>
         </th>
         <th>Last Ping</th>
+        <th>Nag Mode</th>
         <th></th>
     </tr>
     {% for check in checks %}
@@ -74,6 +75,20 @@
             Never
         {% endif %}
         </td>
+
+        <!-- nag -->
+        <td>
+            <div class="checkbox">
+                <span 
+                    data-url="{% url 'hc-update-timeout' check.code %}"
+                    data-timeout="{{ check.nag_timeout.total_seconds }}"
+                    class="timeout-nag">
+                    <input type="checkbox" data-toggle="toggle" />
+                </span>
+            </div>
+        </td>
+        <!-- nag -->
+
         <td>
             <div class="check-menu dropdown">
                 <button class="btn btn-sm btn-default dropdown-toggle" type="button" data-toggle="dropdown">

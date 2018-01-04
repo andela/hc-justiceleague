@@ -70,6 +70,7 @@
     margin-top: 15px;
 }
 
+<<<<<<< HEAD
 /* Advanced styles */
 #show-advanced-time .modal-dialog {
     width: 50%;
@@ -120,4 +121,29 @@ span.whizz_pointer span {
     top: 0;
     z-index: 3;
     display: none;
+}
+#show-usage-modal .tab-content {
+    margin-top: 15px;
+}
+
+ /* nag-time-out-form */
+#nag-period-slider {
+    margin: 20px 50px 80px 50px;
+}
+
+#nag-period-slider.noUi-connect {
+    background: #22bc66;
+}
+
+#nag-grace-slider {
+    margin: 20px 50px 110px 50px;
+}
+
+#nag-grace-slider.noUi-connect {
+    background: #f0ad4e;
+}
+
+#nag-period-slider .noUi-value, .grace-slider .noUi-value {
+    width: 60px;
+    margin-left: -30px;
 }
