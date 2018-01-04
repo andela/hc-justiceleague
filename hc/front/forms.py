@@ -26,6 +26,10 @@ class AdvancedTimeoutForm(forms.Form):
     advanced_grace = forms.IntegerField(min_value=60, max_value=5184000)
 
 
+class NagPeriodForm(forms.Form):
+    nag_period   = forms.IntegerField(min_value=60, max_value=7776000)
+
+
 class AddChannelForm(forms.ModelForm):
 
     class Meta:

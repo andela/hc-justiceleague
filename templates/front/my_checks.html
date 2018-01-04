@@ -81,10 +81,12 @@
 </div>
 <div id="update-timeout-modal" class="modal">
     <div class="modal-dialog">
-        <form id="update-timeout-form" method="post">
+        <form id="update-timeout-form"
+              action="/checks/{{ check.code }}/timeout/" method="post">
             {% csrf_token %}
             <input type="hidden" name="timeout" id="update-timeout-timeout" />
             <input type="hidden" name="grace" id="update-timeout-grace" />
+            <input type="hidden" name="nag" id="update-timeout-nag" />
             <div class="modal-content">
                 <div class="modal-body">
                     <div class="update-timeout-info text-center">
@@ -246,6 +248,71 @@
         </form>
     </div>
 </div>
+
+<!-- nag timeout modal -->
+<div id="nag-timeout-modal" class="modal fade" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <form id="nag-timeout-form" method="post">
+                {% csrf_token %}
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h2 class="modal-title text-center">Configure Nag Time Interval</h2>
+                    </div>
+                    <div class="modal-body">
+                        <div class="update-timeout-info text-center">
+                            <span
+                                class="update-timeout-label"
+                                data-toggle="tooltip"
+                                title="Expected time between nags.">
+                                Interval
+                            </span>
+                            <span
+                                id="nag-period-slider-value"
+                                class="update-timeout-value">
+                                1 minute
+                            </span>
+                            <input type="hidden" name="nag_period" id="nag-period">
+                        </div>
+                        <div id="nag-period-slider"></div>
+
+                        <div class="update-timeout-info text-center">
+                            <span
+                                class="update-timeout-label"
+                                data-toggle="tooltip"
+                                title="When check is late, how much time to wait until nag is sent out">
+                                Grace Time
+                            </span>
+                            <span
+                                id="nag-grace-slider-value"
+                                class="update-timeout-value">
+                                1 day
+                            </span>
+                            <input type="hidden" name="nag_grace" id="nag-grace">
+                        </div>
+
+                        <div id="nag-grace-slider"></div>
+
+                        <div class="update-timeout-terms">
+                            <p>
+                                <span>Interval</span>
+                                Expected time between nags.
+                            </p>
+                            <p>
+                                <span>Grace Time</span>
+                                When a check status is down, how much time to wait until first nag is sent.
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                        <button type="submit" class="btn btn-primary" id="submit-nag">Save</button>
+                    </div>
+                </div>
+        </form>
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
 <div id="remove-check-modal" class="modal">
     <div class="modal-dialog">
         <form id="remove-check-form" method="post">
@@ -347,6 +414,7 @@
 {% endblock %} {% block scripts %} {% compress js %}
 <script src="{% static 'js/jquery-2.1.4.min.js' %}"></script>
 <script src="{% static 'js/bootstrap.min.js' %}"></script>
+<script src="https://gitcdn.github.io/bootstrap-toggle/2.2.2/js/bootstrap-toggle.min.js"></script>
 <script src="{% static 'js/nouislider.min.js' %}"></script>
 <script src="{% static 'js/clipboard.min.js' %}"></script>
 <script src="{% static 'js/checks.js' %}"></script>
