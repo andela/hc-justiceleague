@@ -30,6 +30,56 @@ $(function() {
         return result;
     };
 
+    // Creating a select component in Javascript and assigning options for different priorities
+    var select = document.getElementById('input-select');
+    var priorities = ["Lowest","Low","Normal","High","Emergency"];
+
+    // Append the option elements
+    for ( var i in priorities ){
+    
+        var option = document.createElement("option");
+            option.text = priorities[i];
+            option.value = i;
+    
+        select.appendChild(option);
+    }
+
+    //Creating a Slider to  display the different priorities
+    var priorityslider = document.getElementById('priority-slider');
+    noUiSlider.create(priorityslider, {
+        start: [2],
+        connect: "lower",
+        range: {
+            min: 0,
+            max: 4
+        },
+        pips:{
+            mode: "values",
+            values: [0,1,2,3,4],
+            density: 100
+
+        }
+    });
+
+
+    priorityslider.noUiSlider.on('update', function( values, handle ) {
+        var value = values[handle];
+
+        if ( handle ) {
+            inputPriority.value = value;
+        } else {
+            select.value = Math.round(value);
+        }
+    });
+
+    select.addEventListener('change', function(){
+        priorityslider.noUiSlider.set([this.value, null]);
+    });
+
+
+
+
+
     var periodSlider = document.getElementById("period-slider");
     noUiSlider.create(periodSlider, {
         start: [20],
@@ -116,6 +166,27 @@ $(function() {
 
         return false;
     });
+
+
+    $(".priority-cell").click(function() {
+        var $this = $(this);
+        /*
+        $("#advanced-settings").attr("data-advanced", $this.data("advanced"))
+        $(".output_whizz_grace").val(secsToText(Math.round($this.data("grace"))))
+        $(".output_whizz_period").val(secsToText(Math.round($this.data("timeout"))))
+        $("#advanced-settings").attr("data-grace", $this.data("grace"))
+        $("#advanced-settings").attr("data-period", $this.data("timeout"))
+        $("#update-timeout-form").attr("action", $this.data("url"));
+        periodSlider.noUiSlider.set($this.data("timeout"));
+        graceSlider.noUiSlider.set($this.data("grace"));
+        */
+        $("#priority-modal").modal({ show: true, backdrop: "static" });
+        $("#show-advanced-time").modal("hide");
+
+        return false;
+    });
+
+
 
     $("#advanced-settings").click(function() {
         var $this = $(this);
