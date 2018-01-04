@@ -79,6 +79,42 @@
         </form>
     </div>
 </div>
+
+<div id="priority-modal" class="modal"><!-- Start class modal-->
+    <div class="modal-dialog"><!-- start modal-dialog -->
+        <form id="update-priority-form" method="post"><!--start form -->
+            {% csrf_token %}
+            <input type="hidden" name="priority" id="update-priority-options" />
+            <div class="modal-content"><!--start modal-content -->
+                <div class="modal-body"><!-- start modal-body -->
+                    <div class="update-priority-info text-center"><!-- start Priority text-->
+                        <span class="update-priority-label" data-toggle="tooltip" title="Expected Priorities.">
+                                Priority
+                            </span>
+                    </div><!--end priority text -->
+                    <div id="priority-slider" style="margin-top:10px"><!-- start slider-->
+
+                    </div>  <!--End Slider -->
+                    </div><!-- End Modal body -->
+
+                
+                <div class="modal-footer" style="margin-top:30px"><!-- Start Modal footer-->
+                    <div style="float :left"><!--Start select div -->
+                            <select class="form-control form-control-lg" id ="input-select"><!--Start select input -->
+
+                            </select><!-- End Select input-->
+                    </div>
+                    <div><!-- Start button div-->
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                        <button type="submit" class="btn btn-primary">Save</button>
+                    </div><!-- End button div-->
+                </div><!--End modal-body -->
+            </div><!-- End modal-content-->
+        </form><!--End form -->
+</div><!--End modal-dialog-->
+</div><!--End Class-modal  -->
+
+
 <div id="update-timeout-modal" class="modal">
     <div class="modal-dialog">
         <form id="update-timeout-form" method="post">
