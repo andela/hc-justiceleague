@@ -51,7 +51,13 @@
             </button>
         </td>
         <td class="priority-cell">
-            <button type="button" class="btn btn-info" data-url="{% url 'hc-check-priority' check.code %}">Select Priority</button> 
+            <button type="button" class="btn btn-info" data-priority="{{ check.priority }}" data-url="{% url 'hc-check-priority' check.code %}">
+                {% if check.priority %}
+                    {{check.priority_name|capfirst}}
+                 {% else %}
+                    Normal
+                {% endif %}
+            </button> 
         </td>
         <td class="timeout-cell">
             <span
