@@ -46,7 +46,7 @@ class Check(models.Model):
     code = models.UUIDField(default=uuid.uuid4, editable=False, db_index=True)
     user = models.ForeignKey(User, blank=True, null=True)
     created = models.DateTimeField(auto_now_add=True)
-    priority = models.IntegerField(default=2)
+    priority = models.IntegerField(default=0)
     timeout = models.DurationField(default=DEFAULT_TIMEOUT)
     grace = models.DurationField(default=DEFAULT_GRACE)
     n_pings = models.IntegerField(default=0)
@@ -130,6 +130,11 @@ class Check(models.Model):
             result["next_ping"] = None
 
         return result
+
+    @property
+    def priority_name(self):
+        prio = self.priority
+        return PO_PRIORITIES[prio]
 
 
 class Ping(models.Model):
