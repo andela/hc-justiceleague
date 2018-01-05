@@ -16,7 +16,7 @@ from django.utils.six.moves.urllib.parse import urlencode
 from hc.api.decorators import uuid_or_400
 from hc.api.models import DEFAULT_GRACE, DEFAULT_TIMEOUT, Channel, Check, Ping
 from hc.front.forms import (AddChannelForm, AddWebhookForm, NameTagsForm,
-                            TimeoutForm, AdvancedTimeoutForm)
+                            TimeoutForm, AdvancedTimeoutForm, PriorityForm)
 
 
 # from itertools recipes:
@@ -150,6 +150,21 @@ def update_name(request, code):
 
     return redirect("hc-checks")
 
+@login_required
+@uuid_or_400
+def check_priority(request, code):
+    assert request.method == "POST"
+
+    check = get_object_or_404(Check, code=code)
+    if check.user_id != request.team.user.id:
+        return HttpResponseForbidden()
+
+    form = PriorityForm(request.POST)
+    if form.is_valid():
+        check.priority = form.cleaned_data["priority_select"]
+        check.save()
+
+    return redirect("hc-checks")
 
 @login_required
 @uuid_or_400

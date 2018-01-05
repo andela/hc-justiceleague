@@ -21,6 +21,9 @@ class TimeoutForm(forms.Form):
     timeout = forms.IntegerField(min_value=60, max_value=5184000)
     grace = forms.IntegerField(min_value=60, max_value=5184000)
 
+class PriorityForm(forms.Form):
+    priority_select = forms.IntegerField(min_value=0, max_value=4)
+
 class AdvancedTimeoutForm(forms.Form):
     advanced_period = forms.IntegerField(min_value=60, max_value=5184000)
     advanced_grace = forms.IntegerField(min_value=60, max_value=5184000)
