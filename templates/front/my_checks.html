@@ -82,7 +82,7 @@
 
 <div id="priority-modal" class="modal"><!-- Start class modal-->
     <div class="modal-dialog"><!-- start modal-dialog -->
-        <form id="update-priority-form" method="post"><!--start form -->
+        <form id="update-priority-form" method="post" ><!--start form -->
             {% csrf_token %}
             <input type="hidden" name="priority" id="update-priority-options" />
             <div class="modal-content"><!--start modal-content -->
@@ -100,7 +100,7 @@
                 
                 <div class="modal-footer" style="margin-top:30px"><!-- Start Modal footer-->
                     <div style="float :left"><!--Start select div -->
-                            <select class="form-control form-control-lg" id ="input-select"><!--Start select input -->
+                            <select class="form-control form-control-lg" id ="input-select" name="priority_select"><!--Start select input -->
 
                             </select><!-- End Select input-->
                     </div>
