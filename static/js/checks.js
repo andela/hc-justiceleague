@@ -243,16 +243,8 @@ $(function() {
 
     $(".priority-cell").click(function() {
         var $this = $(this);
-        /*
-        $("#advanced-settings").attr("data-advanced", $this.data("advanced"))
-        $(".output_whizz_grace").val(secsToText(Math.round($this.data("grace"))))
-        $(".output_whizz_period").val(secsToText(Math.round($this.data("timeout"))))
-        $("#advanced-settings").attr("data-grace", $this.data("grace"))
-        $("#advanced-settings").attr("data-period", $this.data("timeout"))
-        $("#update-timeout-form").attr("action", $this.data("url"));
-        periodSlider.noUiSlider.set($this.data("timeout"));
-        graceSlider.noUiSlider.set($this.data("grace"));
-        */
+        var buttonPriority = $this.find("button").data("url")
+        $("#update-priority-form").attr("action", buttonPriority)
         $("#priority-modal").modal({ show: true, backdrop: "static" });
         $("#show-advanced-time").modal("hide");
 
