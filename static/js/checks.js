@@ -32,53 +32,20 @@ $(function() {
 
     // Creating a select component in Javascript and assigning options for different priorities
     var select = document.getElementById('input-select');
-    var priorities = ["Lowest","Low","Normal","High","Emergency"];
+    var priorities = {}
+    priorities[-2] = "Lowest";
+    priorities[-1] =  "Low";
+    priorities[0]  = "Normal";
+    priorities[1]  = "High";
+    priorities[2]  = "Emergency";
 
-    // Append the option elements
-    for ( var i in priorities ){
-    
-        var option = document.createElement("option");
-            option.text = priorities[i];
-            option.value = i;
+    for ([k,v] of Object.entries(priorities)) {
+        var option   = document.createElement("option");
+        option.text  = v;
+        option.value = k;
     
         select.appendChild(option);
-    }
-
-    //Creating a Slider to  display the different priorities
-    var priorityslider = document.getElementById('priority-slider');
-    noUiSlider.create(priorityslider, {
-        start: [2],
-        connect: "lower",
-        range: {
-            min: 0,
-            max: 4
-        },
-        pips:{
-            mode: "values",
-            values: [0,1,2,3,4],
-            density: 100
-
-        }
-    });
-
-
-    priorityslider.noUiSlider.on('update', function( values, handle ) {
-        var value = values[handle];
-
-        if ( handle ) {
-            inputPriority.value = value;
-        } else {
-            select.value = Math.round(value);
-        }
-    });
-
-    select.addEventListener('change', function(){
-        priorityslider.noUiSlider.set([this.value, null]);
-    });
-
-
-
-
+      }
 
     var periodSlider = document.getElementById("period-slider");
     noUiSlider.create(periodSlider, {
@@ -172,10 +139,52 @@ $(function() {
         var $this = $(this);
         var buttonPriority = $this.find("button").data("url")
         $("#update-priority-form").attr("action", buttonPriority)
+        var priorityNbr = $this.find("button").data("priority")
+        $("#priority-slider").attr("data-sliderstart", priorityNbr)
+        $("#input-select").val(priorityNbr)
+        // Slider
+        //Creating a Slider to  display the different priorities
+    var priorityslider = document.getElementById('priority-slider');
+    var startSlider = $("#priority-slider");
+    
+    noUiSlider.create(priorityslider, {
+        start: [startSlider.attr("data-sliderstart")],
+        connect: "lower",
+        range: {
+            min: -2,
+            max: 2
+        },
+        pips:{
+            mode: "values",
+            values: [-2,-1,0,1,2],
+            density: 100
+
+        }
+    }, true);
+
+    priorityslider.noUiSlider.on('update', function( values, handle ) {
+        var value = values[handle];
+
+        if ( handle ) {
+            inputPriority.value = value;
+        } else {
+            select.value = Math.round(value);
+        }
+    });
+
+    select.addEventListener('change', function(){
+        priorityslider.noUiSlider.set([this.value, null]);
+    });
+        // Slider
         $("#priority-modal").modal({ show: true, backdrop: "static" });
         $("#show-advanced-time").modal("hide");
 
         return false;
+    });
+
+    $(".destroySlider").click(function(){
+        var priorityslider = document.getElementById('priority-slider');
+        priorityslider.noUiSlider.destroy()
     });
 
 
