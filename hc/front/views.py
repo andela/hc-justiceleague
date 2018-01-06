@@ -251,6 +251,16 @@ def log(request, code):
 
 
 @login_required
+def failed_jobs(request):
+    templatename = 'front/failed_jobs.html'
+    failed_jobs_qs = []
+    context = {
+        'failed_jobs': failed_jobs_qs
+    }
+    return render(request, templatename, context)
+
+
+@login_required
 def channels(request):
     if request.method == "POST":
         code = request.POST["channel"]
