@@ -255,8 +255,6 @@ def log(request, code):
 def failed_jobs(request):
     """Fetch failed jobs"""
     get_checks = Check.objects.filter(user=request.team.user).order_by("created")
-    print(get_checks)
-    
     all_checks = list(get_checks)
     
     counter = Counter()
@@ -267,7 +265,6 @@ def failed_jobs(request):
         if status == "down":
             # Add a down check to failed check list to be rendered
             failed_checks.append(check)
-        print(type(check))
         
         for tag in check.tags_list():
             if tag == "":
