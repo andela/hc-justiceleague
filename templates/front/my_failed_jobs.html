@@ -1,0 +1,111 @@
+{% load hc_extras humanize %}
+<table id="checks-table" class="table hidden-xs">
+    <tr>
+        <th></th>
+        <th class="th-name">Name</th>
+        <th>Ping UL</th>
+        <th class="th-period">
+            Period <br />
+            <span class="checks-subline">Grace</span>
+        </th>
+        <th>Last Ping</th>
+        <th></th>
+    </tr>
+    {% for check in failed_checks %}
+    <tr class="checks-row">
+        <td class="indicator-cell">
+            {% if check.get_status == "down" %}
+                <span class="status icon-down"></span>
+            {% else %}
+                <span class="status icon-missing"></span>
+            {% endif %}
+        </td>
+        <td class="name-cell">
+            <div data-name="{{ check.name }}"
+                    data-tags="{{ check.tags }}"
+                    data-url="{% url 'hc-update-name' check.code %}"
+                    class="my-checks-name {% if not check.name %}unnamed{% endif %}">
+                <div>{{ check.name|default:"unnamed" }}</div>
+                {% for tag in check.tags_list %}
+                <span class="label label-tag">{{ tag }}</span>
+                {% endfor %}
+            </div>
+        </td>
+        <td class="url-cell">
+            <span class="my-checks-url">
+                <span class="base">{{ ping_endpoint }}</span>{{ check.code }}
+            </span>
+            <button
+                class="copy-link hidden-sm"
+                data-clipboard-text="{{ check.url }}">
+                copy
+            </button>
+        </td>
+        <td class="timeout-cell">
+            <span
+                data-url="{% url 'hc-update-timeout' check.code %}"
+                data-timeout="{{ check.timeout.total_seconds }}"
+                data-grace="{{ check.grace.total_seconds }}"
+                class="timeout-grace">
+                {{ check.timeout|hc_duration }}
+                <br />
+                <span class="checks-subline">
+                {{ check.grace|hc_duration }}
+                </span>
+            </span>
+        </td>
+        <td>
+        {% if check.last_ping %}
+            <span
+                data-toggle="tooltip"
+                title="{{ check.last_ping|date:'N j, Y, P e' }}">
+                {{ check.last_ping|naturaltime }}
+            </span>
+        {% else %}
+            Never
+        {% endif %}
+        </td>
+
+        <td>
+            <div class="check-menu dropdown">
+                <button class="btn btn-sm btn-default dropdown-toggle" type="button" data-toggle="dropdown">
+                <span class="icon-settings" aria-hidden="true"></span>
+                </button>
+                <ul class="dropdown-menu">
+                    <li {% if check.status == "new" or check.status == "paused" %}class="disabled"{% endif %}>
+                        <a class="pause-check"
+                           href="#"
+                           data-url="{% url 'hc-pause' check.code %}">
+                           Pause Monitoring
+                        </a>
+                    </li>
+                    <li role="separator" class="divider"></li>
+                    <li>
+                        <a href="{% url 'hc-log' check.code %}">
+                            Log
+                        </a>
+                    </li>
+                    <li>
+                        <a
+                            href="#"
+                            class="usage-examples"
+                            data-url="{{ check.url }}"
+                            data-email="{{ check.email }}">
+                            Usage Examples
+                        </a>
+                    </li>
+                    <li role="separator" class="divider"></li>
+                    <li>
+                        <a href="#" class="check-menu-remove"
+                            data-name="{{ check.name_then_code }}"
+                            data-url="{% url 'hc-remove-check' check.code %}">
+                            Remove
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </td>
+    </tr>
+    {% endfor %}
+
+</table>
