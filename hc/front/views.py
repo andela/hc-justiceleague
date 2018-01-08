@@ -35,6 +35,7 @@ def my_checks(request):
     counter = Counter()
     down_tags, grace_tags = set(), set()
     for check in checks:
+
         status = check.get_status()
         for tag in check.tags_list():
             if tag == "":
@@ -252,12 +253,43 @@ def log(request, code):
 
 @login_required
 def failed_jobs(request):
-    templatename = 'front/failed_jobs.html'
-    failed_jobs_qs = []
-    context = {
-        'failed_jobs': failed_jobs_qs
+    """Fetch failed jobs"""
+    get_checks = Check.objects.filter(user=request.team.user).order_by("created")
+    print(get_checks)
+    
+    all_checks = list(get_checks)
+    
+    counter = Counter()
+    down_tags, grace_tags = set(), set()
+    failed_checks = []
+    for check in all_checks:
+        status = check.get_status()
+        if status == "down":
+            # Add a down check to failed check list to be rendered
+            failed_checks.append(check)
+        print(type(check))
+        
+        for tag in check.tags_list():
+            if tag == "":
+                continue
+
+            counter[tag] += 1
+
+            if status == "down":
+                down_tags.add(tag)
+            elif check.in_grace_period():
+                grace_tags.add(tag)
+    ctx = {
+        "page": "failed-jobs",
+        "failed_checks": failed_checks,
+        "now": timezone.now(),
+        "tags": counter.most_common(),
+        "down_tags": down_tags,
+        "grace_tags": grace_tags,
+        "ping_endpoint": settings.PING_ENDPOINT
     }
-    return render(request, templatename, context)
+
+    return render(request, "front/failed_jobs.html", ctx)
 
 
 @login_required

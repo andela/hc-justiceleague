@@ -32,9 +32,7 @@
 </div>
 <div class="row">
     <div class="col-sm-12">
-
-
-    {% if failed_jobs %}
+    {% if failed_checks %}
         {% comment %} {% include "front/my_checks_mobile.html" %} {% endcomment %}
         {% include "front/my_failed_jobs.html" %}
     {% else %}
