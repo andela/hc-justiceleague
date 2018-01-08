@@ -23,13 +23,17 @@ def ping(request, code):
 
     check.n_pings = F("n_pings") + 1
     if check.last_ping is not None:
-        ping_diff = timezone.now() - check.last_ping
+        check.ping_diff = timezone.now() - check.last_ping
     check.last_ping = timezone.now()
     if check.status in ("new", "paused"):
         check.status = "up"
+    if check.status=="up" and check.ping_diff < (check.timeout - check.grace):
+        check.status = "fast"
 
     check.save()
     check.refresh_from_db()
+    if check.status == "fast":
+        check.send_alert()
 
     ping = Ping(owner=check)
     headers = request.META
