@@ -107,20 +107,27 @@
                             </div>
                         </div> 
                     <hr />
-                        <div class="row"><!--Start row-->
-                            <div class="col-sm-12"><!--Start col-12 div-->
-                                <label  class="col-sm-2 control-label">
-                                    Escalate
+
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <label for="add-team-members"
+                                       class="col-sm-2 control-label">
+                                    Team Members
                                 </label>
-                                <div class="col-sm-10"><!--Start col-9 div-->
-                                    <input  name="escalate" type="text" value="" placeholder="Enter Email" class="form-control" />
-                                    <span class="escalate-help-block">
-                                            Enter email of person who notifications of high
-                                            priority checks shall be sent to.
+                                <div class="col-sm-10">
+                                    <input id="add-team-members" name="team"
+                                           type="text" class="form-control"
+                                           placeholder="Team Emails" />
+                                    <span class="help-block">
+                                        Enter email addresses of team members
+                                        to be contacted in case failing high
+                                        priority checks are not attended to in
+                                        24 hours. The emails should be space
+                                        separated.
                                     </span>
                                 </div><!--Start col-9 div-->
                             </div><!--End col div-->
-                        </div><!--End row-->  
+                        </div><!--End row-->
                 </div><!-- End Modal body -->
                 <div class="modal-footer" style="margin-top:10px"><!-- Start Modal footer-->
                     <div><!-- Start button div-->
