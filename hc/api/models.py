@@ -94,6 +94,8 @@ class Check(models.Model):
 
         now = timezone.now()
 
+        if self.ping_diff is None:
+            return "down"
         if self.ping_diff < (self.timeout - self.grace):
             return "fast"
         if (self.last_ping + self.timeout + self.grace) > now:
