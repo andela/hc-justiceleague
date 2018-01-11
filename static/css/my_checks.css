@@ -20,7 +20,6 @@
     width: 100px;
     text-align: left;
     white-space: nowrap;
-
 }
 
 #period-slider {
@@ -28,7 +27,7 @@
 }
 
 #period-slider.noUi-connect {
-  background: #22bc66;
+    background: #22bc66;
 }
 
 #grace-slider {
@@ -36,10 +35,11 @@
 }
 
 #grace-slider.noUi-connect {
-  background: #f0ad4e;
+    background: #f0ad4e;
 }
 
-#period-slider .noUi-value, #grace-slider .noUi-value {
+#period-slider .noUi-value,
+#grace-slider .noUi-value {
     width: 60px;
     margin-left: -30px;
 }
@@ -52,7 +52,6 @@
     margin: 0;
 }
 
-
 .update-timeout-terms span {
     font-weight: bold;
 }
@@ -63,11 +62,88 @@
     font-style: normal;
 }
 
+#show-usage-modal .modal-dialog {
+    width: 1100px;
+}
 
-#show-usage-modal  .modal-dialog {
-     width: 1100px;
- }
+#show-usage-modal .tab-content {
+    margin-top: 15px;
+}
 
- #show-usage-modal .tab-content {
-     margin-top: 15px;
- }
+<<<<<<< HEAD
+/* Advanced styles */
+#show-advanced-time .modal-dialog {
+    width: 50%;
+}
+.set_advanced .whizz_manager div {
+    margin-bottom: 1em;
+}
+.set_advanced #time_whizz {
+    background-color: #eee;
+    width: auto;
+    padding: 0 2em;
+}
+.row.whizz_container {
+    margin: auto;
+}
+#time_whizz .flip_whizz,
+#time_whizz .whizz_value {
+    padding: 1em;
+    margin-top: 1px;
+    border-radius: 3px;
+}
+#time_whizz .flip_whizz {
+    color: #24bc66;
+    margin-bottom: 0.5em;
+}
+#time_whizz .whizz_value .whizz_value_input {
+    border: none;
+    width: 20px;
+    background: none;
+}
+#time_whizz .whizz_value .whizz_value_input:focus {
+    outline: none;
+}
+#time_whizz input[type="number"]::-webkit-inner-spin-button,
+#time_whizz input[type="number"]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+span.whizz_pointer span {
+    left: -4.2%;
+    font-size: 20px;
+    color: #eee;
+    position: absolute;
+}
+.whizz_container {
+    position: absolute;
+    right: 5%;
+    top: 0;
+    z-index: 3;
+    display: none;
+}
+#show-usage-modal .tab-content {
+    margin-top: 15px;
+}
+
+ /* nag-time-out-form */
+#nag-period-slider {
+    margin: 20px 50px 80px 50px;
+}
+
+#nag-period-slider.noUi-connect {
+    background: #22bc66;
+}
+
+#nag-grace-slider {
+    margin: 20px 50px 110px 50px;
+}
+
+#nag-grace-slider.noUi-connect {
+    background: #f0ad4e;
+}
+
+#nag-period-slider .noUi-value, .grace-slider .noUi-value {
+    width: 60px;
+    margin-left: -30px;
+}

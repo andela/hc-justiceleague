@@ -3,33 +3,21 @@
     <tr>
         <th></th>
         <th class="th-name">Name</th>
-        <th>Ping URL</th>
-        <th>Priority</th>
+        <th>Ping UL</th>
         <th class="th-period">
             Period <br />
             <span class="checks-subline">Grace</span>
         </th>
         <th>Last Ping</th>
-        <th>Nag Mode</th>
         <th></th>
     </tr>
-    {% for check in checks %}
+    {% for check in failed_checks %}
     <tr class="checks-row">
         <td class="indicator-cell">
-            {% if check.get_status == "new" %}
-                <span class="status icon-up new"
-                    data-toggle="tooltip" title="New. Has never received a ping."></span>
-            {% elif check.get_status == "paused" %}
-                <span class="status icon-paused"
-                    data-toggle="tooltip" title="Monitoring paused. Ping to resume."></span>
-            {% elif check.in_grace_period %}
-                <span class="status icon-grace"></span>
-            {% elif check.get_status == "up" %}
-                <span class="status icon-up"></span>
-            {% elif check.get_status == "down" %}
+            {% if check.get_status == "down" %}
                 <span class="status icon-down"></span>
-            {% elif check.get_status == "fast" %}
-                <span class="glyphicon glyphicon-fire"></span>
+            {% else %}
+                <span class="status icon-missing"></span>
             {% endif %}
         </td>
         <td class="name-cell">
@@ -53,28 +41,18 @@
                 copy
             </button>
         </td>
-        <td class="priority-cell">
-            <button type="button" class="btn btn-info" data-priority="{{ check.priority }}" data-url="{% url 'hc-check-priority' check.code %}">
-                {% if check.priority %}
-                    {{check.priority_name|capfirst}}
-                 {% else %}
-                    Normal
-                {% endif %}
-            </button> 
-        </td>
         <td class="timeout-cell">
             <span
                 data-url="{% url 'hc-update-timeout' check.code %}"
                 data-timeout="{{ check.timeout.total_seconds }}"
                 data-grace="{{ check.grace.total_seconds }}"
-                data-advanced="{% url 'hc-advanced-timeout' check.code %}"
                 class="timeout-grace">
                 {{ check.timeout|hc_duration }}
                 <br />
                 <span class="checks-subline">
                 {{ check.grace|hc_duration }}
                 </span>
-            </span> 
+            </span>
         </td>
         <td>
         {% if check.last_ping %}
@@ -87,19 +65,6 @@
             Never
         {% endif %}
         </td>
-
-        <!-- nag -->
-        <td>
-            <div class="checkbox">
-                <span 
-                    data-url="{% url 'hc-update-timeout' check.code %}"
-                    data-timeout="{{ check.nag_timeout.total_seconds }}"
-                    class="timeout-nag">
-                    <input type="checkbox" data-toggle="toggle" />
-                </span>
-            </div>
-        </td>
-        <!-- nag -->
 
         <td>
             <div class="check-menu dropdown">

@@ -1,0 +1,49 @@
+{% extends "base.html" %}
+{% load compress staticfiles %}
+
+{% block title %}Reports - healthchecks.io{% endblock %}
+
+
+{% block content %}
+<div class="row">
+    <div class="col-sm-12">
+        <h1>
+        {% if request.team == request.user.profile %}
+            Reports
+        </h1>
+        {% else %}
+            {{ request.team.team_name }}
+        {% endif %}
+        </h1>
+    </div>
+    {% if tags %}
+    <div id="my-checks-tags" class="col-sm-12">
+        {% for tag, count in tags %}
+            {% if tag in down_tags %}
+                <button class="btn btn-danger btn-xs" data-toggle="button">{{ tag }}</button>
+            {% elif tag in grace_tags %}
+                <button class="btn btn-warning btn-xs" data-toggle="button">{{ tag }}</button>
+            {% else %}
+                <button class="btn btn-default btn-xs" data-toggle="button">{{ tag }}</button>
+            {% endif %}
+        {% endfor %}
+    </div>
+    {% endif %}
+
+</div>
+{% include "accounts/reports_desktop.html" %}
+
+
+
+
+{% endblock %}
+
+{% block scripts %}
+{% compress js %}
+<script src="{% static 'js/jquery-2.1.4.min.js' %}"></script>
+<script src="{% static 'js/bootstrap.min.js' %}"></script>
+<script src="{% static 'js/nouislider.min.js' %}"></script>
+<script src="{% static 'js/clipboard.min.js' %}"></script>
+<script src="{% static 'js/checks.js' %}"></script>
+{% endcompress %}
+{% endblock %}

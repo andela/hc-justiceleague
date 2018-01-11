@@ -1,6 +1,7 @@
 import json
 from datetime import timedelta as td
 from django.utils.timezone import now
+from django.conf import settings
 
 from hc.api.models import Check
 from hc.test import BaseTestCase
@@ -34,14 +35,40 @@ class ListChecksTestCase(BaseTestCase):
     def test_it_works(self):
         r = self.get()
         ### Assert the response status code
+        self.assertEqual(r.status_code, 200)
 
         doc = r.json()
         self.assertTrue("checks" in doc)
 
         checks = {check["name"]: check for check in doc["checks"]}
         ### Assert the expected length of checks
+        self.assertEqual(len(checks), 2)
+
         ### Assert the checks Alice 1 and Alice 2's timeout, grace, ping_url, status,
         ### last_ping, n_pings and pause_url
+        """
+        Alice 1
+        """
+        self.assertEqual(checks["Alice 1"]["timeout"], 3600)
+        self.assertEqual(checks["Alice 1"]["grace"], 900)
+        self.assertEqual(checks["Alice 1"]["ping_url"], self.a1.url())
+        self.assertEqual(checks["Alice 1"]["status"], "new")
+        self.assertEqual(checks["Alice 1"]["last_ping"], self.a1.last_ping.isoformat())
+        self.assertEqual(checks["Alice 1"]["n_pings"], 1)
+        update_url = settings.SITE_ROOT + "/api/v1/checks/%s" % self.a1.code
+        pause_url = update_url + "/pause"
+        self.assertEqual(checks["Alice 1"]["pause_url"], pause_url)
+        """
+        Alice 2
+        """
+        self.assertEqual(checks["Alice 2"]["timeout"], 86400)
+        self.assertEqual(checks["Alice 2"]["grace"], 3600)
+        self.assertEqual(checks["Alice 2"]["ping_url"], self.a2.url())
+        self.assertEqual(checks["Alice 2"]["status"], "up")
+        self.assertEqual(checks["Alice 2"]["last_ping"], self.a2.last_ping.isoformat())
+        update_url = settings.SITE_ROOT + "/api/v1/checks/%s" % self.a2.code
+        pause_url = update_url + "/pause"
+        self.assertEqual(checks["Alice 2"]["pause_url"], pause_url)      
 
     def test_it_shows_only_users_checks(self):
         bobs_check = Check(user=self.bob, name="Bob 1")
@@ -54,3 +81,11 @@ class ListChecksTestCase(BaseTestCase):
             self.assertNotEqual(check["name"], "Bob 1")
 
     ### Test that it accepts an api_key in the request
+        # put api key in payload variable
+        payload = json.dumps({"api_key": "abc"})
+        # add payload to the request.
+        # without api_key in the payload or wrong value of api_key, this request fails
+        response = self.client.generic("GET", "/api/v1/checks/", payload,
+                                content_type="application/json")
+        self.assertEqual(response.status_code, 200)
+        

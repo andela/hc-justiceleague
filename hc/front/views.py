@@ -5,7 +5,9 @@ from itertools import tee
 import requests
 from django.conf import settings
 from django.contrib import messages
+from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
+from django.core.exceptions import ObjectDoesNotExist
 from django.db.models import Count
 from django.http import Http404, HttpResponseBadRequest, HttpResponseForbidden
 from django.shortcuts import get_object_or_404, redirect, render
@@ -14,9 +16,23 @@ from django.utils import timezone
 from django.utils.crypto import get_random_string
 from django.utils.six.moves.urllib.parse import urlencode
 from hc.api.decorators import uuid_or_400
-from hc.api.models import DEFAULT_GRACE, DEFAULT_TIMEOUT, Channel, Check, Ping
-from hc.front.forms import (AddChannelForm, AddWebhookForm, NameTagsForm,
-                            TimeoutForm)
+from hc.api.models import (
+    Channel,
+    Check,
+    Ping,
+    DEFAULT_GRACE,
+    DEFAULT_TIMEOUT,
+    DEFAULT_NAG,
+)
+from hc.front.forms import (
+    AddChannelForm,
+    AddWebhookForm,
+    AdvancedTimeoutForm,
+    NameTagsForm,
+    TimeoutForm,
+    NagPeriodForm,
+    PriorityForm,
+    )
 
 
 # from itertools recipes:
@@ -29,12 +45,13 @@ def pairwise(iterable):
 
 @login_required
 def my_checks(request):
-    q = Check.objects.filter(user=request.team.user).order_by("created")
+    q = Check.objects.filter(user=request.team.user).order_by("-priority")
     checks = list(q)
 
     counter = Counter()
     down_tags, grace_tags = set(), set()
     for check in checks:
+
         status = check.get_status()
         for tag in check.tags_list():
             if tag == "":
@@ -111,7 +128,8 @@ def docs_api(request):
         "SITE_ROOT": settings.SITE_ROOT,
         "PING_ENDPOINT": settings.PING_ENDPOINT,
         "default_timeout": int(DEFAULT_TIMEOUT.total_seconds()),
-        "default_grace": int(DEFAULT_GRACE.total_seconds())
+        "default_grace": int(DEFAULT_GRACE.total_seconds()),
+        "default_nag": int(DEFAULT_NAG.total_seconds())
     }
 
     return render(request, "front/docs_api.html", ctx)
@@ -150,6 +168,34 @@ def update_name(request, code):
 
     return redirect("hc-checks")
 
+@login_required
+@uuid_or_400
+def check_priority(request, code):
+    assert request.method == "POST"
+
+    check = get_object_or_404(Check, code=code)
+    if check.user_id != request.team.user.id:
+        return HttpResponseForbidden()
+
+    form = PriorityForm(request.POST)
+    if form.is_valid():
+        check.priority = form.cleaned_data["priority_select"]
+        usr            = check.user
+        team_name      = usr.profile.team_name
+        team_emails    = form.cleaned_data["team"]
+        check.save()
+        if (check.priority == 1) or (check.priority == 2):
+            for email in team_emails.split(' '):
+                try:
+                    teammate = User.objects.get(email=email)
+                    if teammate:
+                        if check.user.email == email:  # Avoid cyclic invites
+                            continue
+                        usr.profile.invite(teammate)
+                except ObjectDoesNotExist:  # Non-registered email entered
+                    return redirect("hc-checks")
+
+    return redirect("hc-checks")
 
 @login_required
 @uuid_or_400
@@ -164,6 +210,29 @@ def update_timeout(request, code):
     if form.is_valid():
         check.timeout = td(seconds=form.cleaned_data["timeout"])
         check.grace = td(seconds=form.cleaned_data["grace"])
+        check.nag   = td(seconds=form.cleaned_data.get('nag'))
+        check.save()
+    elif request.POST.get('nag_period'):
+        np_form = NagPeriodForm(request.POST)
+        if np_form.is_valid():
+            check.nag   = td(seconds=np_form.cleaned_data.get('nag_period'))
+            check.save()
+
+    return redirect("hc-checks")
+
+@login_required
+@uuid_or_400
+def update_advanced(request, code):
+    assert request.method == "POST"
+
+    check = get_object_or_404(Check, code=code)
+    if check.user != request.team.user:
+        return HttpResponseForbidden()
+
+    form = AdvancedTimeoutForm(request.POST)
+    if form.is_valid():
+        check.timeout = td(seconds=form.cleaned_data["advanced_period"])
+        check.grace = td(seconds=form.cleaned_data["advanced_grace"])
         check.save()
 
     return redirect("hc-checks")
@@ -248,6 +317,44 @@ def log(request, code):
     }
 
     return render(request, "front/log.html", ctx)
+
+
+@login_required
+def failed_jobs(request):
+    """Fetch failed jobs"""
+    get_checks = Check.objects.filter(user=request.team.user).order_by("created")
+    all_checks = list(get_checks)
+    
+    counter = Counter()
+    down_tags, grace_tags = set(), set()
+    failed_checks = []
+    for check in all_checks:
+        status = check.get_status()
+        if status == "down":
+            # Add a down check to failed check list to be rendered
+            failed_checks.append(check)
+        
+        for tag in check.tags_list():
+            if tag == "":
+                continue
+
+            counter[tag] += 1
+
+            if status == "down":
+                down_tags.add(tag)
+            elif check.in_grace_period():
+                grace_tags.add(tag)
+    ctx = {
+        "page": "failed-jobs",
+        "failed_checks": failed_checks,
+        "now": timezone.now(),
+        "tags": counter.most_common(),
+        "down_tags": down_tags,
+        "grace_tags": grace_tags,
+        "ping_endpoint": settings.PING_ENDPOINT
+    }
+
+    return render(request, "front/failed_jobs.html", ctx)
 
 
 @login_required

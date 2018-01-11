@@ -5,9 +5,11 @@ from hc.front import views
 check_urls = [
     url(r'^name/$', views.update_name, name="hc-update-name"),
     url(r'^timeout/$', views.update_timeout, name="hc-update-timeout"),
+    url(r'^atimeout/$', views.update_advanced, name="hc-advanced-timeout"),
     url(r'^pause/$', views.pause, name="hc-pause"),
     url(r'^remove/$', views.remove_check, name="hc-remove-check"),
     url(r'^log/$', views.log, name="hc-log"),
+    url(r'^priority/$', views.check_priority, name="hc-check-priority"),
 ]
 
 channel_urls = [
@@ -32,6 +34,7 @@ urlpatterns = [
     url(r'^$', views.index, name="hc-index"),
     url(r'^checks/$', views.my_checks, name="hc-checks"),
     url(r'^checks/add/$', views.add_check, name="hc-add-check"),
+    url(r'^checks/failed-jobs/$', views.failed_jobs, name="hc-failed-jobs"),
     url(r'^checks/([\w-]+)/', include(check_urls)),
     url(r'^integrations/', include(channel_urls)),
 

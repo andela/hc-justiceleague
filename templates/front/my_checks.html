@@ -1,10 +1,4 @@
-{% extends "base.html" %}
-{% load compress staticfiles %}
-
-{% block title %}My Checks - healthchecks.io{% endblock %}
-
-
-{% block content %}
+{% extends "base.html" %} {% load compress staticfiles %} {% block title %} My Checks - healthchecks.io {% endblock %} {% block content %}
 <div class="row">
     <div class="col-sm-12">
         <h1>
@@ -17,29 +11,21 @@
     </div>
     {% if tags %}
     <div id="my-checks-tags" class="col-sm-12">
-        {% for tag, count in tags %}
-            {% if tag in down_tags %}
-                <button class="btn btn-danger btn-xs" data-toggle="button">{{ tag }}</button>
-            {% elif tag in grace_tags %}
-                <button class="btn btn-warning btn-xs" data-toggle="button">{{ tag }}</button>
-            {% else %}
-                <button class="btn btn-default btn-xs" data-toggle="button">{{ tag }}</button>
-            {% endif %}
-        {% endfor %}
+        {% for tag, count in tags %} {% if tag in down_tags %}
+        <button class="btn btn-danger btn-xs" data-toggle="button">{{ tag }}</button>
+        {% elif tag in grace_tags %}
+        <button class="btn btn-warning btn-xs" data-toggle="button">{{ tag }}</button>
+        {% else %}
+        <button class="btn btn-default btn-xs" data-toggle="button">{{ tag }}</button>
+        {% endif %} {% endfor %}
     </div>
     {% endif %}
-
 </div>
 <div class="row">
     <div class="col-sm-12">
-
-
-    {% if checks %}
-        {% include "front/my_checks_mobile.html" %}
-        {% include "front/my_checks_desktop.html" %}
-    {% else %}
-    <div class="alert alert-info">You don't have any checks yet.</div>
-    {% endif %}
+        {% if checks %} {% include "front/my_checks_mobile.html" %} {% include "front/my_checks_desktop.html" %} {% else %}
+        <div class="alert alert-info">You don't have any checks yet.</div>
+        {% endif %}
     </div>
 </div>
 <div class="row">
@@ -50,7 +36,6 @@
         </form>
     </div>
 </div>
-
 <div id="update-name-modal" class="modal">
     <div class="modal-dialog">
         <form id="update-name-form" class="form-horizontal" method="post">
@@ -61,45 +46,30 @@
                     <h4 class="update-timeout-title">Name and Tags</h4>
                 </div>
                 <div class="modal-body">
-                        <div class="form-group">
-                            <label for="update-name-input" class="col-sm-2 control-label">
-                                Name
-                            </label>
-                            <div class="col-sm-9">
-                                <input
-                                    id="update-name-input"
-                                    name="name"
-                                    type="text"
-                                    value="---"
-                                    placeholder="unnamed"
-                                    class="input-name form-control" />
-
-                                <span class="help-block">
+                    <div class="form-group">
+                        <label for="update-name-input" class="col-sm-2 control-label">
+                            Name
+                        </label>
+                        <div class="col-sm-9">
+                            <input id="update-name-input" name="name" type="text" value="---" placeholder="unnamed" class="input-name form-control" />
+                            <span class="help-block">
                                     Give this check a human-friendly name,
                                     so you can easily recognize it later.
                                 </span>
-                            </div>
                         </div>
-
-                        <div class="form-group">
-                            <label for="update-tags-input" class="col-sm-2 control-label">
-                                Tags
-                            </label>
-                            <div class="col-sm-9">
-                                <input
-                                    id="update-tags-input"
-                                    name="tags"
-                                    type="text"
-                                    value=""
-                                    placeholder="production www"
-                                    class="form-control" />
-
-                                <span class="help-block">
+                    </div>
+                    <div class="form-group">
+                        <label for="update-tags-input" class="col-sm-2 control-label">
+                            Tags
+                        </label>
+                        <div class="col-sm-9">
+                            <input id="update-tags-input" name="tags" type="text" value="" placeholder="production www" class="form-control" />
+                            <span class="help-block">
                                     Optionally, assign tags for easy filtering.
                                     Separate multiple tags with spaces.
                                 </span>
-                            </div>
                         </div>
+                    </div>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
@@ -109,66 +79,300 @@
         </form>
     </div>
 </div>
+
+<div id="priority-modal" class="modal"><!-- Start class modal-->
+    <div class="modal-dialog"><!-- start modal-dialog -->
+        <form id="update-priority-form" method="post" ><!--start form -->
+            {% csrf_token %}
+            <input type="hidden" name="priority" id="update-priority-options" />
+            <div class="modal-content"><!--start modal-content -->
+                <div class="modal-body"><!-- start modal-body -->
+                    <div class="modal-header" style="margin-bottom:10px">
+                        <div class="update-priority-info text-center"><!-- start Priority text-->
+                            <span class="update-priority-label" data-toggle="tooltip" title="Expected Priorities.">
+                                    <h4 style="float :left">Priority</h4>
+                            </span>
+                        </div><!--end priority text -->
+                    </div><!--End modal Header-->
+                    <div class="form-group"><!--Start Form group div-->
+                        <div id="priority-slider"  style="margin-bottom:10px" ><!-- start slider-->
+                        </div>  <!--End Slider -->
+                    </div><!--End form group div-->
+                        <div class="row" style="margin-top:50px">
+                            <div class="col-sm-12">                  
+                                <div style="float :left"><!--Start select div -->
+                                    <select class="form-control form-control-lg" id ="input-select" name="priority_select"><!--Start select input -->
+                                    </select><!-- End Select input-->
+                                </div><!--End select div-->
+                            </div>
+                        </div> 
+                    <hr />
+                        <div class="row">
+                            <div class="col-sm-12">
+                                <label for="add-team-members"
+                                       class="col-sm-2 control-label">
+                                    Team Members
+                                </label>
+                                <div class="col-sm-10">
+                                    <input id="add-team-members" name="team"
+                                           type="text" class="form-control"
+                                           placeholder="Team Emails" />
+                                    <span class="help-block">
+                                        Enter email addresses of team members
+                                        to be contacted in case failing high
+                                        priority checks are not attended to in
+                                        24 hours. The emails should be space
+                                        separated.
+                                    </span>
+                                </div><!--Start col-9 div-->
+                            </div><!--End col div-->
+                        </div><!--End row-->
+                </div><!-- End Modal body -->
+                <div class="modal-footer" style="margin-top:10px"><!-- Start Modal footer-->
+                    <div><!-- Start button div-->
+                        <button type="button" class="btn btn-default destroySlider" data-dismiss="modal">Cancel</button>
+                        <button type="submit" class="btn btn-primary destroySlider">Save</button>
+                    </div><!-- End button div-->
+                </div><!--End modal-body -->
+            </div><!-- End modal-content-->
+        </form><!--End form -->
+</div><!--End modal-dialog-->
+</div><!--End Class-modal  -->
+
 
 <div id="update-timeout-modal" class="modal">
     <div class="modal-dialog">
-        <form id="update-timeout-form" method="post">
+        <form id="update-timeout-form"
+              action="/checks/{{ check.code }}/timeout/" method="post">
             {% csrf_token %}
             <input type="hidden" name="timeout" id="update-timeout-timeout" />
             <input type="hidden" name="grace" id="update-timeout-grace" />
+            <input type="hidden" name="nag" id="update-timeout-nag" />
             <div class="modal-content">
                 <div class="modal-body">
                     <div class="update-timeout-info text-center">
-                        <span
-                            class="update-timeout-label"
-                            data-toggle="tooltip"
-                            title="Expected time between pings.">
-                            Period
-                        </span>
-                        <span
-                            id="period-slider-value"
-                            class="update-timeout-value">
-                            1 day
-                        </span>
+                        <span class="update-timeout-label" data-toggle="tooltip" title="Expected time between pings.">
+                                Period
+                            </span>
+                        <span id="period-slider-value" class="update-timeout-value">
+                                1 day
+                            </span>
                     </div>
                     <div id="period-slider"></div>
-
                     <div class="update-timeout-info text-center">
-                        <span
-                            class="update-timeout-label"
-                            data-toggle="tooltip"
-                            title="When check is late, how much time to wait until alert is sent">
-                            Grace Time
-                        </span>
-                        <span
-                            id="grace-slider-value"
-                            class="update-timeout-value">
-                            1 day
-                        </span>
+                        <span class="update-timeout-label" data-toggle="tooltip" title="When check is late, how much time to wait until alert is sent">
+                                Grace Time
+                            </span>
+                        <span id="grace-slider-value" class="update-timeout-value">
+                                1 day
+                            </span>
                     </div>
-
                     <div id="grace-slider"></div>
-
                     <div class="update-timeout-terms">
                         <p>
-                            <span>Period</span>
-                            Expected time between pings.
+                            <span>Period</span> Expected time between pings.
                         </p>
                         <p>
-                            <span>Grace Time</span>
-                            When a check is late, how much time to wait until alert is sent.
+                            <span>Grace Time</span> When a check is late, how much time to wait until alert is sent.
                         </p>
                     </div>
-
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-                    <button type="submit" class="btn btn-primary">Save</button>
+                    <div style="float: left" class="advanced-time" id="advanced-settings">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Advanced Settings</button>
+                    </div>
+                    <div>
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                        <button type="submit" class="btn btn-primary">Save</button>
+                    </div>
                 </div>
             </div>
         </form>
     </div>
 </div>
+<div id="show-advanced-time" class="modal">
+    <div class="modal-dialog">
+        <form id="update-advanced-timeout-form" method="post" class="form-inline form-group">
+            {% csrf_token %}
+            <div class="modal-content">
+                <div class="modal-body row">
+                    <div class="set_advanced col-sm-12">
+                        <h2>Set your time here:</h2>
+                        <div class="row whizz_container">
+                            <div id="time_whizz" class="col-sm-3 text-center whizz_days">
+                                <div class="whizz_value_title row">
+                                    <span><b>Days</b></span>
+                                </div>
+                                <div class="up_whizz flip_whizz row">
+                                    <span class="glyphicon glyphicon-chevron-up"></span>
+                                </div>
+                                <div class="whizz_value row">
+                                    <input type="number" value="00" class="whizz_value_input" id="days">
+                                </div>
+                                <div class="down_whizz flip_whizz row">
+                                    <span class="glyphicon glyphicon-chevron-down"></span>
+                                </div>
+                            </div>
+                            <div id="time_whizz" class="col-sm-3 text-center whizz_hours">
+                                <div class="whizz_value_title row">
+                                    <span><b>Hours</b></span>
+                                </div>
+                                <div class="up_whizz flip_whizz row">
+                                    <span class="glyphicon glyphicon-chevron-up"></span>
+                                </div>
+                                <div class="whizz_value row">
+                                    <input type="number" value="00" class="whizz_value_input" id="hours">
+                                </div>
+                                <div class="down_whizz flip_whizz row">
+                                    <span class="glyphicon glyphicon-chevron-down"></span>
+                                </div>
+                            </div>
+                            <div id="time_whizz" class="col-sm-3 text-center whizz_minutes">
+                                <div class="whizz_value_title row">
+                                    <span><b>Minutes</b></span>
+                                </div>
+                                <div class="up_whizz flip_whizz row">
+                                    <span class="glyphicon glyphicon-chevron-up"></span>
+                                </div>
+                                <div class="whizz_value row">
+                                    <input type="number" value="00" class="whizz_value_input" id="minutes">
+                                </div>
+                                <div class="down_whizz flip_whizz row">
+                                    <span class="glyphicon glyphicon-chevron-down"></span>
+                                </div>
+                            </div>
+                            <div id="time_whizz" class="col-sm-3 text-center whizz_seconds">
+                                <div class="whizz_value_title row">
+                                    <span><b>Seconds</b></span>
+                                </div>
+                                <div class="up_whizz flip_whizz row">
+                                    <span class="glyphicon glyphicon-chevron-up"></span>
+                                </div>
+                                <div class="whizz_value row">
+                                    <input type="number" value="00" class="whizz_value_input" id="seconds">
+                                </div>
+                                <div class="down_whizz flip_whizz row">
+                                    <span class="glyphicon glyphicon-chevron-down"></span>
+                                </div>
+                            </div>
+                            <div class="col-sm-12">
+                                <span class="whizz_pointer">
+                                    <span class="glyphicon glyphicon-triangle-left
+"></span>
+                                </span>
+                            </div>
+                        </div>
+                        <div class="whizz_manager col-sm-12">
+                            <div class="col-sm-2" style="margin-top: 3px;">
+                                <label>Period:</label>
+                            </div>
+                            <div class="input-group input-group-sm">
+                                <input type="hidden" name="advanced_period" class="whizz_period_to_submit">
+                                <input type="text" class="form-control input-sm output_whizz_period" placeholder="DD:HH:MM:SS" id="whizz_output" required>
+                                <span class="input-group-addon trigger_time_period" data-kind="period">
+                                    <span class="glyphicon glyphicon-time trigger_period" data-kind="period"></span>
+                                </span>
+                            </div>
+                            <br>
+                            <div class="col-sm-2" style="margin-top: 3px;">
+                                <label>Grace:</label>
+                            </div>
+                            <div class="input-group input-group-sm">
+                                <input type="text" class="form-control input-sm output_whizz_grace" placeholder="DD:HH:MM:SS" id="whizz_output" required>
+                                <input type="hidden" name="advanced_grace" class="whizz_grace_to_submit">
+                                <span class="input-group-addon trigger_time_grace" data-kind="grace">
+                                    <span class="glyphicon glyphicon-time trigger_grace" data-kind="grace"></span>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="update-timeout-terms col-sm-12">
+                        <br>
+                        <p>
+                            <span>Period</span> Expected time between pings.
+                        </p>
+                        <p>
+                            <span>Grace Time</span> When a check is late, how much time to wait until alert is sent.
+                        </p>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <div style="float: left" class="advanced-time">
+                        <button type="button" class="btn btn-default timeout-grace" data-dismiss="modal">Simple Settings</button>
+                    </div>
+                    <div>
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                        <button type="submit" class="btn btn-primary">Save</button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- nag timeout modal -->
+<div id="nag-timeout-modal" class="modal fade" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <form id="nag-timeout-form" method="post">
+                {% csrf_token %}
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h2 class="modal-title text-center">Configure Nag Time Interval</h2>
+                    </div>
+                    <div class="modal-body">
+                        <div class="update-timeout-info text-center">
+                            <span
+                                class="update-timeout-label"
+                                data-toggle="tooltip"
+                                title="Expected time between nags.">
+                                Interval
+                            </span>
+                            <span
+                                id="nag-period-slider-value"
+                                class="update-timeout-value">
+                                1 minute
+                            </span>
+                            <input type="hidden" name="nag_period" id="nag-period">
+                        </div>
+                        <div id="nag-period-slider"></div>
+
+                        <div class="update-timeout-info text-center">
+                            <span
+                                class="update-timeout-label"
+                                data-toggle="tooltip"
+                                title="When check is late, how much time to wait until nag is sent out">
+                                Grace Time
+                            </span>
+                            <span
+                                id="nag-grace-slider-value"
+                                class="update-timeout-value">
+                                1 day
+                            </span>
+                            <input type="hidden" name="nag_grace" id="nag-grace">
+                        </div>
+
+                        <div id="nag-grace-slider"></div>
+
+                        <div class="update-timeout-terms">
+                            <p>
+                                <span>Interval</span>
+                                Expected time between nags.
+                            </p>
+                            <p>
+                                <span>Grace Time</span>
+                                When a check status is down, how much time to wait until first nag is sent.
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                        <button type="submit" class="btn btn-primary" id="submit-nag">Save</button>
+                    </div>
+                </div>
+        </form>
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
 
 <div id="remove-check-modal" class="modal">
     <div class="modal-dialog">
@@ -183,8 +387,7 @@
                     <p>You are about to remove check
                         <strong class="remove-check-name">---</strong>.
                     </p>
-                    <p>Once it's gone there is no "undo" and you cannot get
-                    the old ping URL back.</p>
+                    <p>Once it's gone there is no "undo" and you cannot get the old ping URL back.</p>
                     <p>Are you sure?</p>
                 </div>
                 <div class="modal-footer">
@@ -195,7 +398,6 @@
         </form>
     </div>
 </div>
-
 <div id="show-usage-modal" class="modal">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -227,11 +429,8 @@
                         <a href="#email" data-toggle="tab">Email</a>
                     </li>
                 </ul>
-
             </div>
             <div class="modal-body">
-
-
                 <div class="tab-content">
                     {% with ping_url="<span class='ex'></span>" %}
                     <div role="tabpanel" class="tab-pane active" id="crontab">
@@ -256,16 +455,13 @@
                         {% include "front/snippets/powershell.html" %}
                     </div>
                     <div class="tab-pane" id="email">
-                            As an alternative to HTTP/HTTPS requests,
-                            you can "ping" this check by sending an
-                            email message to
-                            <div class="email-address">
-                                <code class="em"></code>
-                            </div>
+                        As an alternative to HTTP/HTTPS requests, you can "ping" this check by sending an email message to
+                        <div class="email-address">
+                            <code class="em"></code>
+                        </div>
                     </div>
                     {% endwith %}
                 </div>
-
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-default" data-dismiss="modal">Got It!</button>
@@ -273,19 +469,14 @@
         </div>
     </div>
 </div>
-
 <form id="pause-form" method="post">
     {% csrf_token %}
 </form>
-
-{% endblock %}
-
-{% block scripts %}
-{% compress js %}
+{% endblock %} {% block scripts %} {% compress js %}
 <script src="{% static 'js/jquery-2.1.4.min.js' %}"></script>
 <script src="{% static 'js/bootstrap.min.js' %}"></script>
+<script src="https://gitcdn.github.io/bootstrap-toggle/2.2.2/js/bootstrap-toggle.min.js"></script>
 <script src="{% static 'js/nouislider.min.js' %}"></script>
 <script src="{% static 'js/clipboard.min.js' %}"></script>
 <script src="{% static 'js/checks.js' %}"></script>
-{% endcompress %}
-{% endblock %}
+{% endcompress %} {% endblock %}

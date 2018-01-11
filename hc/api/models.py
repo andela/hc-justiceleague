@@ -2,6 +2,7 @@
 
 import hashlib
 import json
+import time
 import uuid
 from datetime import timedelta as td
 
@@ -17,10 +18,12 @@ STATUSES = (
     ("up", "Up"),
     ("down", "Down"),
     ("new", "New"),
-    ("paused", "Paused")
+    ("paused", "Paused"),
+    ("fast", "fast")
 )
 DEFAULT_TIMEOUT = td(days=1)
 DEFAULT_GRACE = td(hours=1)
+DEFAULT_NAG = td(minutes=1)
 CHANNEL_KINDS = (("email", "Email"), ("webhook", "Webhook"),
                  ("hipchat", "HipChat"),
                  ("slack", "Slack"), ("pd", "PagerDuty"), ("po", "Pushover"),
@@ -46,12 +49,17 @@ class Check(models.Model):
     code = models.UUIDField(default=uuid.uuid4, editable=False, db_index=True)
     user = models.ForeignKey(User, blank=True, null=True)
     created = models.DateTimeField(auto_now_add=True)
+    priority = models.IntegerField(default=0)
     timeout = models.DurationField(default=DEFAULT_TIMEOUT)
     grace = models.DurationField(default=DEFAULT_GRACE)
     n_pings = models.IntegerField(default=0)
     last_ping = models.DateTimeField(null=True, blank=True)
+    ping_diff = models.DurationField(null=True, blank=True)
     alert_after = models.DateTimeField(null=True, blank=True, editable=False)
-    status = models.CharField(max_length=6, choices=STATUSES, default="new")
+    status = models.CharField(max_length=10, choices=STATUSES, default="new")
+    nag = models.DurationField(null=True)
+    nag_after = models.DateTimeField(null=True, blank=True)
+    last_nag_alert = models.DateTimeField(null=True, blank=True)
 
     def name_then_code(self):
         if self.name:
@@ -69,7 +77,7 @@ class Check(models.Model):
         return "%s@%s" % (self.code, settings.PING_EMAIL_DOMAIN)
 
     def send_alert(self):
-        if self.status not in ("up", "down"):
+        if self.status not in ("up", "down", "fast"):
             raise NotImplementedError("Unexpected status: %s" % self.status)
 
         errors = []
@@ -86,9 +94,12 @@ class Check(models.Model):
 
         now = timezone.now()
 
-        if self.last_ping + self.timeout + self.grace > now:
+        if self.ping_diff is None:
+            return "down"
+        if self.ping_diff < (self.timeout - self.grace):
+            return "fast"
+        if (self.last_ping + self.timeout + self.grace) > now:
             return "up"
-
         return "down"
 
     def in_grace_period(self):
@@ -129,6 +140,16 @@ class Check(models.Model):
             result["next_ping"] = None
 
         return result
+
+    def update_nag(self):
+        now = timezone.now()
+        self.nag_after = now + self.nag
+        self.last_nag_alert = now
+
+    @property
+    def priority_name(self):
+        prio = self.priority
+        return PO_PRIORITIES[prio]
 
 
 class Ping(models.Model):

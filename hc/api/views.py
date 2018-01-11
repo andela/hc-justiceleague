@@ -22,12 +22,18 @@ def ping(request, code):
         return HttpResponseBadRequest()
 
     check.n_pings = F("n_pings") + 1
+    if check.last_ping is not None:
+        check.ping_diff = timezone.now() - check.last_ping
     check.last_ping = timezone.now()
     if check.status in ("new", "paused"):
         check.status = "up"
+    if check.status=="up" and check.ping_diff < (check.timeout - check.grace):
+        check.status = "fast"
 
     check.save()
     check.refresh_from_db()
+    if check.status == "fast":
+        check.send_alert()
 
     ping = Ping(owner=check)
     headers = request.META
@@ -62,6 +68,8 @@ def checks(request):
             check.timeout = td(seconds=request.json["timeout"])
         if "grace" in request.json:
             check.grace = td(seconds=request.json["grace"])
+        if "nag" in request.json:
+            check.nag = td(seconds=request.json.get('nag'))
 
         check.save()
 

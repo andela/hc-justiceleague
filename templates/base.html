@@ -13,6 +13,7 @@
 
     {% compress css %}
     <link rel="stylesheet" href="{% static 'css/bootstrap.css' %}" type="text/css">
+    <link rel="stylesheet" href="{% static 'css/glyphicons.css' %}" type="text/css">
     <link rel="stylesheet" href="{% static 'css/icomoon.css' %}" type="text/css">
     <link rel="stylesheet" href="{% static 'css/nouislider.min.css' %}" type="text/css">
     <link rel="stylesheet" href="{% static 'css/nouislider.pips.css' %}" type="text/css">
@@ -30,6 +31,8 @@
     <link rel="stylesheet" href="{% static 'css/add_pushover.css' %}" type="text/css">
     <link rel="stylesheet" href="{% static 'css/settings.css' %}" type="text/css">
     {% endcompress %}
+
+    <link href="https://gitcdn.github.io/bootstrap-toggle/2.2.2/css/bootstrap-toggle.min.css" rel="stylesheet">
 </head>
 <body class="page-{{ page }}">
     <nav class="navbar navbar-default">
@@ -80,7 +83,9 @@
                     <li {% if page == 'channels' %} class="active" {% endif %}>
                         <a href="{% url 'hc-channels' %}">Integrations</a>
                     </li>
-
+                    <li {% if page == 'reports' %} class="active" {% endif %}>
+                        <a href="{% url 'hc-reports' %}">Reports</a>
+                    </li>
                 {% endif %}
 
 
@@ -122,6 +127,8 @@
                         {% endif %}
 
                         <li><a href="{% url 'hc-profile' %}">Account Settings</a></li>
+                        <li role="separator" class="divider"></li>
+                        <li><a href="{% url 'hc-failed-jobs' %}">Failed Jobs</a></li>
                         <li role="separator" class="divider"></li>
 
                         {% for team in request.teams %}

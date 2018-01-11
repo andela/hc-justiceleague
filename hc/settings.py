@@ -20,7 +20,7 @@ HOST = "localhost"
 SECRET_KEY = "---"
 DEBUG = True
 ALLOWED_HOSTS = []
-DEFAULT_FROM_EMAIL = 'healthchecks@example.org'
+DEFAULT_FROM_EMAIL = os.environ.get('EMAIL_HOST_USER')
 USE_PAYMENTS = False
 
 
@@ -139,7 +139,19 @@ STATICFILES_FINDERS = (
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 COMPRESS_OFFLINE = True
 
+""" Using GMAIL SMTP server for email relay
+In production, uncomment lines beginning with with "##" and comment out
+DJMAIL_REAL_BACKEND and the first EMAIL_BACKEND declaration.
+"""
+## EMAIL_USE_TLS = True
+## EMAIL_HOST = 'smtp.gmail.com'
+## EMAIL_HOST_USER = os.environ.get('HC_GMAIL_USER')
+## EMAIL_HOST_PASSWORD = os.environ.get('HC_GMAIL_PASS')
+## EMAIL_PORT = 587
+
 EMAIL_BACKEND = "djmail.backends.default.EmailBackend"
+## EMAIL_BACKEND = "django.core.mail.backends.smtp.emailbackend"
+DJMAIL_REAL_BACKEND="django.core.mail.backends.console.EmailBackend"
 
 # Slack integration -- override these in local_settings
 SLACK_CLIENT_ID = None
@@ -159,3 +171,12 @@ if os.path.exists(os.path.join(BASE_DIR, "hc/local_settings.py")):
     from .local_settings import *
 else:
     warnings.warn("local_settings.py not found, using defaults")
+
+# smtp server config
+DJMAIL_REAL_BACKEND = 'djmail.backends.async.EmailBackend'
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER')  # your email
+EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD')  # your password
+EMAIL_USE_TLS = True
