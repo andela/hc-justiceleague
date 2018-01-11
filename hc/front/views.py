@@ -5,7 +5,9 @@ from itertools import tee
 import requests
 from django.conf import settings
 from django.contrib import messages
+from django.contrib.auth.models import User
 from django.contrib.auth.decorators import login_required
+from django.core.exceptions import ObjectDoesNotExist
 from django.db.models import Count
 from django.http import Http404, HttpResponseBadRequest, HttpResponseForbidden
 from django.shortcuts import get_object_or_404, redirect, render
@@ -29,6 +31,7 @@ from hc.front.forms import (
     NameTagsForm,
     TimeoutForm,
     NagPeriodForm,
+    PriorityForm,
     )
 
 
@@ -42,7 +45,7 @@ def pairwise(iterable):
 
 @login_required
 def my_checks(request):
-    q = Check.objects.filter(user=request.team.user).order_by("created")
+    q = Check.objects.filter(user=request.team.user).order_by("-priority")
     checks = list(q)
 
     counter = Counter()
@@ -165,6 +168,34 @@ def update_name(request, code):
 
     return redirect("hc-checks")
 
+@login_required
+@uuid_or_400
+def check_priority(request, code):
+    assert request.method == "POST"
+
+    check = get_object_or_404(Check, code=code)
+    if check.user_id != request.team.user.id:
+        return HttpResponseForbidden()
+
+    form = PriorityForm(request.POST)
+    if form.is_valid():
+        check.priority = form.cleaned_data["priority_select"]
+        usr            = check.user
+        team_name      = usr.profile.team_name
+        team_emails    = form.cleaned_data["team"]
+        check.save()
+        if (check.priority == 1) or (check.priority == 2):
+            for email in team_emails.split(' '):
+                try:
+                    teammate = User.objects.get(email=email)
+                    if teammate:
+                        if check.user.email == email:  # Avoid cyclic invites
+                            continue
+                        usr.profile.invite(teammate)
+                except ObjectDoesNotExist:  # Non-registered email entered
+                    return redirect("hc-checks")
+
+    return redirect("hc-checks")
 
 @login_required
 @uuid_or_400
